@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -10,8 +11,18 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HomeView'),
-        centerTitle: true,
+        backgroundColor: const Color(0xff303030),
+        title: Text(
+          'ByCafe',
+          style: TextStyle( color: Colors.white),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Iconsax.menu_1_copy),
+            color: Colors.white,
+          )
+        ],
       ),
       body: const Center(
         child: Text(
