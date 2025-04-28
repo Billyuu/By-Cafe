@@ -14,16 +14,23 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: const Color(0xff303030),
         title: Text(
           'ByCafe',
-          style: TextStyle( color: Colors.white),
+          style: TextStyle(color: Colors.white),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Iconsax.menu_1_copy),
-            color: Colors.white,
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(Iconsax.menu_1_copy),
+        //     color: Colors.white,
+        //   )
+        // ],
+        leading: Builder(
+          builder: (context) => IconButton(
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              icon: Icon(Iconsax.menu_1_copy)),
+        ),
+        
       ),
+      drawer: Drawer(),
       body: const Center(
         child: Text(
           'HomeView is working',
