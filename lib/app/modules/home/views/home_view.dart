@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:bycafe/app/routes/app_pages.dart';
+// import 'package:bycafe/app/modules/detail_pemesanan/views/detail_pemesanan_view.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -27,7 +29,7 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       backgroundColor: Colors.white,
-      endDrawer: Drawer( 
+      endDrawer: Drawer(
         child: Column(
           children: [
             Container(
@@ -129,9 +131,9 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   Opacity(
                     //agar terlihat transparan
-                    opacity: 0.1,
+                    opacity: 0.2,
                     child: Image.network(
-                      'https://img.freepik.com/vetores-premium/padrao-sem-emenda-com-mao-desenhada-xicaras-de-cha-e-cafe-esbocadas-fundo-de-ladrilhos-da-pausa-para-o-cafe_217204-777.jpg',
+                      'https://st2.depositphotos.com/2791409/8121/i/450/depositphotos_81218166-stock-photo-coffee-backgrond.jpg',
                       fit: BoxFit
                           .cover, //mengisi gambar penuh tanpa merubah rasionya
                       width: double.infinity,
@@ -206,6 +208,18 @@ class HomeView extends GetView<HomeController> {
                   )
                 ],
               ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.DETAIL_PEMESANAN);
+            },
+            child: Container(
+              height: 100,
+              color: Colors.amber,
             ),
           ),
         ]),
