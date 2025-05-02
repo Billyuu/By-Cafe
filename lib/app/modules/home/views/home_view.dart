@@ -18,18 +18,16 @@ class HomeView extends GetView<HomeController> {
           'ByCafe',
           style: TextStyle(color: Colors.white),
         ),
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              icon: Icon(Iconsax.menu_1_copy),
-              color: Colors.white,
-            ),
+        leading: Builder(
+          builder: (context) => IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Icon(Iconsax.menu_1_copy),
+            color: Colors.white,
           ),
-        ],
+        ),
       ),
       backgroundColor: Colors.white,
-      endDrawer: Drawer(
+      drawer: Drawer(
         child: Column(
           children: [
             Container(
@@ -65,7 +63,7 @@ class HomeView extends GetView<HomeController> {
               child: ListView(
                 children: [
                   ListTile(
-                    leading: Icon(Iconsax.home),
+                    leading: Icon(Iconsax.home_2),
                     title: Text('Home'),
                     onTap: () {},
                   ),
@@ -177,35 +175,83 @@ class HomeView extends GetView<HomeController> {
                             ),
                           ),
                         ),
-
                         //gambar di kanan
-                        Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
-                                'assets/coffe.PNG',
-                                width: 120,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            // SizedBox(
-                            //     height: 5),
-                            Text(
-                              'Cappucino Latte',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'pacifico',
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        )
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'assets/cofe.png',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ],
                     ),
                   )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Card(
+            elevation: 5,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Gambar di kiri
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey[300],
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          'https://img.lovepik.com/png/20231117/an-image-of-iced-tea-with-ice-vector-clipart-sticker_620567_wh1200.png', // Ganti URL sesuai kebutuhan
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  // Teks judul dan stok di tengah
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Es Teh',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff303030),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Stock: 100',
+                          style: TextStyle(fontSize: 14,  color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Harga di kanan
+                  Text(
+                    'Rp. 4.000',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff303030),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -219,7 +265,31 @@ class HomeView extends GetView<HomeController> {
             },
             child: Container(
               height: 100,
-              color: Colors.amber,
+              width: 400,
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(top: 16),
+              decoration: BoxDecoration(
+                color: Color(0xff303030),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'BAYAR',
+                    style: TextStyle(fontSize: 19, color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    'Rp. 50.000 (1 item)',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ]),
