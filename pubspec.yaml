@@ -80,6 +80,7 @@ flutter:
   #   - family: pacifico
   #     fonts:
   #       - asset: fonts/pacifico/Pacifico-Regular.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

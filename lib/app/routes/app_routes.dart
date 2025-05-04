@@ -5,10 +5,12 @@ abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
   static const DETAIL_PEMESANAN = _Paths.DETAIL_PEMESANAN;
+  static const ADD_PENJUALAN = _Paths.ADD_PENJUALAN;
 }
 
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
   static const DETAIL_PEMESANAN = '/detail-pemesanan';
+  static const ADD_PENJUALAN = '/add-penjualan';
 }

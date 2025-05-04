@@ -16,8 +16,8 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: Color(0xff303030),
         title: Text(
           'ByCafe',
-          style: TextStyle(color: Colors.white),
-        ),
+            style: TextStyle(fontFamily: 'pacifico', color: Colors.white),
+          ),
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -31,15 +31,15 @@ class HomeView extends GetView<HomeController> {
         child: Column(
           children: [
             Container(
-              height: 200,
+              height: 210,
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-              color: Color(0xff303030),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              color: const Color(0xff303030),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
                     child: Icon(
@@ -47,13 +47,28 @@ class HomeView extends GetView<HomeController> {
                       size: 30,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     'ByCafe',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Flexible(
+                    child: Text(
+                      'davisabilissalimuyp@gmail.com',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow
+                          .ellipsis, // Tambahkan elipsis (...) jika terlalu panjang
+                      maxLines: 1,
+                      softWrap: false,
                     ),
                   ),
                 ],
@@ -63,17 +78,19 @@ class HomeView extends GetView<HomeController> {
               child: ListView(
                 children: [
                   ListTile(
-                    leading: Icon(Iconsax.home_2),
-                    title: Text('Home'),
-                    onTap: () {},
+                    leading: Icon(Iconsax.shop_add_copy),
+                    title: Text('Penjualan'),
+                    onTap: () {
+                      Get.toNamed(Routes.ADD_PENJUALAN);
+                    },
                   ),
                   ListTile(
-                    leading: Icon(Iconsax.setting_2),
+                    leading: Icon(Iconsax.setting_2_copy),
                     title: Text('Settings'),
                     onTap: () {},
                   ),
                   ListTile(
-                    leading: Icon(Iconsax.logout_1),
+                    leading: Icon(Iconsax.logout_copy),
                     title: Text('Lougout'),
                     onTap: () {},
                   ),
@@ -133,10 +150,10 @@ class HomeView extends GetView<HomeController> {
                     //Menyusun elemen secara bebas, misalnya teks di atas gambar, ikon di sudut layar, dll.
                     children: [
                       Opacity(
-                        //agar terlihat transparan
+                        //agar transparan
                         opacity: 0.2,
-                        child: Image.network(
-                          'https://st2.depositphotos.com/2791409/8121/i/450/depositphotos_81218166-stock-photo-coffee-backgrond.jpg',
+                        child: Image.asset(
+                          'assets/background.jpg',
                           fit: BoxFit
                               .cover, //mengisi gambar penuh tanpa merubah rasionya
                           width: double.infinity,
