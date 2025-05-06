@@ -14,8 +14,8 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
       appBar: AppBar(
         backgroundColor: Color(0xff303030),
         title: const Text(
-          'Penjualan',
-          style: TextStyle(color: Colors.white),
+          'Tambahkan Produk Penjualan',
+          style: TextStyle(fontFamily: 'calfont', color: Colors.white),
         ),
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left_2_copy, color: Colors.white),
@@ -28,7 +28,7 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
       backgroundColor: Colors.white,
       body: const Center(
         child: Text(
-          'Ngelu cik',
+          'produk',
           style: TextStyle(fontSize: 20),
         ),
       ),

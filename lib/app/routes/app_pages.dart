@@ -6,6 +6,12 @@ import '../modules/detail_pemesanan/bindings/detail_pemesanan_binding.dart';
 import '../modules/detail_pemesanan/views/detail_pemesanan_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/login/bindings/login_binding.dart';
+import '../modules/login/views/login_view.dart';
+import '../modules/menu_penjualan/bindings/menu_penjualan_binding.dart';
+import '../modules/menu_penjualan/views/menu_penjualan_view.dart';
+import '../modules/splash_screen/bindings/splash_screen_binding.dart';
+import '../modules/splash_screen/views/splash_screen_view.dart';
 
 part 'app_routes.dart';
 
@@ -29,6 +35,21 @@ class AppPages {
       name: _Paths.ADD_PENJUALAN,
       page: () => const AddPenjualanView(),
       binding: AddPenjualanBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOGIN,
+      page: () => const LoginView(),
+      binding: LoginBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASH_SCREEN,
+      page: () => const SplashScreenView(),
+      binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.MENU_PENJUALAN,
+      page: () => const MenuPenjualanView(),
+      binding: MenuPenjualanBinding(),
     ),
   ];
 }

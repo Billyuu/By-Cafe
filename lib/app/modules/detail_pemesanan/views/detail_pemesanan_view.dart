@@ -158,28 +158,14 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  // Container(
-                  //   height: 70,
-                  //   decoration: BoxDecoration(
-                  //       color: Color(0xff303030),
-                  //       borderRadius: BorderRadius.circular(20)),
-                  //   child: Center(
-                  //     child: Text(
-                  //       'BAYAR',
-                  //       style: TextStyle(fontSize: 19, color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
                   SizedBox(
                     height: 70,
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff303030),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)
-                        )
-                      ),
+                          backgroundColor: Color(0xff303030),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
                       child: Text(
                         'BAYAR',
                         style: TextStyle(fontSize: 19, color: Colors.white),
