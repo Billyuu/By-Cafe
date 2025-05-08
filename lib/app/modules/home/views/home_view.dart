@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:bycafe/app/routes/app_pages.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 // import 'package:bycafe/app/modules/detail_pemesanan/views/detail_pemesanan_view.dart';
 
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({super.key});
+  final CarouselSliderController _controller = CarouselSliderController();
+  HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff303030),
+        backgroundColor: Color(0xff3949ab),
         title: Text(
           'ByCafe',
           style: TextStyle(fontFamily: 'pacifico', color: Colors.white),
@@ -26,7 +28,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff3949ab),
       drawer: Drawer(
         child: Column(
           children: [
@@ -102,369 +104,266 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-      body: Obx(
-        () => SingleChildScrollView(
-          physics: controller.isKeyboardVisible.value
-              ? AlwaysScrollableScrollPhysics()
-              : NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(children: [
-              TextField(
-                cursorColor: Color(0xff303030),
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  prefixIcon: Icon(
-                    Iconsax.search_favorite_copy,
-                    color: Colors.grey,
-                  ),
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 255, 255, 255),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                        color: const Color(0xff303030)), // Saat tidak fokus
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                        color: const Color(0xff303030), width: 2), // Saat fokus
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 170,
-                child: PageView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    // Container 1
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        height: 170,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff303030),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Stack(
-                            children: [
-                              Opacity(
-                                opacity: 0.2,
-                                child: Image.asset(
-                                  'assets/background.jpg',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: const [
-                                            Text(
-                                              "We'll be back",
-                                              style: TextStyle(
-                                                fontFamily: 'calfont',
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              "we promised.",
-                                              style: TextStyle(
-                                                fontFamily: 'calfont',
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.asset(
-                                        'assets/kopii.png',
-                                        width: 170,
-                                        height: 150,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+      body: Stack(
+        children: [
+          Obx(
+            () => SingleChildScrollView(
+              physics: controller.isKeyboardVisible.value
+                  ? AlwaysScrollableScrollPhysics()
+                  : NeverScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(children: [
+                  TextField(
+                    cursorColor: Color(0xff303030),
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      prefixIcon: Icon(
+                        Iconsax.search_favorite_copy,
+                        color: Colors.grey,
+                      ),
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 255, 255, 255),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(
+                            color: const Color(0xff303030)), // Saat tidak fokus
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(
+                            color: const Color(0xff303030),
+                            width: 2), // Saat fokus
                       ),
                     ),
-
-                    // Container 2
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        height: 170,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff4a4a4a),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Stack(
-                            children: [
-                              Opacity(
-                                opacity: 0.2,
-                                child: Image.asset(
-                                  'assets/background.jpg',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: const [
-                                            Text(
-                                              "Discover New",
-                                              style: TextStyle(
-                                                fontFamily: 'calfont',
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              "Coffee Moments",
-                                              style: TextStyle(
-                                                fontFamily: 'calfont',
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.asset(
-                                        'assets/kopii.png',
-                                        width: 170,
-                                        height: 150,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Container 3
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        height: 170,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff5c5c5c),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Stack(
-                            children: [
-                              Opacity(
-                                opacity: 0.2,
-                                child: Image.asset(
-                                  'assets/background.jpg',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: const [
-                                            Text(
-                                              "Your Daily",
-                                              style: TextStyle(
-                                                fontFamily: 'calfont',
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              "Coffee Dose",
-                                              style: TextStyle(
-                                                fontFamily: 'calfont',
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.asset(
-                                        'assets/kopii.png',
-                                        width: 170,
-                                        height: 150,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 415,
-                child: GridView.builder(
-                  itemCount: 10,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Jumlah kolom
                   ),
-                  itemBuilder: (context, index) {
-                    // final item = controller.itemList[index];
-                    // final imageKey = GlobalKey();
-
-                    return InkWell(
-                      onTap: () {
-                        // controller.onItemTap(item);
-                        // final imageBox = imageKey.currentContext!
-                        //     .findRenderObject() as RenderBox;
-                        // final bayarBox = bayarKey.currentContext!
-                        //     .findRenderObject() as RenderBox;
-
-                        // controller.startAnimation(
-                        //   context: context,
-                        //   imageBox: imageBox,
-                        //   bayarBox: bayarBox,
-                        // );
-                      },
-                      child: Card(
-                        elevation: 5,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 80,
-                                // width: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.grey[300],
-                                  image: const DecorationImage(
-                                    image: AssetImage('assets/esteh.png'),
-                                    // fit: BoxFit.cover,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: 160,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      viewportFraction: 0.7,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      onPageChanged: (index, reason) =>
+                          controller.onPageChanged(index),
+                    ),
+                    items: controller.imageList.map((item) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 37, 37, 37),
+                              ),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Opacity(
+                                    opacity: 0.2,
+                                    child: Image.asset(
+                                      item['image']!,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 35),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item['text']!,
+                                                style: TextStyle(
+                                                  fontFamily: 'calfont',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  shadows: [
+                                                    Shadow(
+                                                      blurRadius: 10.0,
+                                                      color: Colors.black,
+                                                      offset: Offset(2.0, 2.0),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(height: 3),
+                                              Text(
+                                                item['text2']!,
+                                                style: TextStyle(
+                                                  fontFamily: 'calfont',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  shadows: [
+                                                    Shadow(
+                                                      blurRadius: 10.0,
+                                                      color: Colors.black,
+                                                      offset: Offset(2.0, 2.0),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Image.asset(
+                                          item['logo']!,
+                                          width: 110,
+                                          height: 90,
+                                          // fit: BoxFit.cover,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Es Teh',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff303030),
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Rp. 4.000',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff303030),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children:
+                            controller.imageList.asMap().entries.map((entry) {
+                          return GestureDetector(
+                            onTap: () => _controller.animateToPage(entry.key),
+                            child: Container(
+                              width: 7.0,
+                              height: 7.0,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 4.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black)
+                                      .withOpacity(
+                                          controller.currentIndex == entry.key
+                                              ? 0.9
+                                              : 0.4)),
+                            ),
+                          );
+                        }).toList(),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: Get.height * .57,
+                    child: GridView.builder(
+                      itemCount: 20,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Jumlah kolom
                       ),
-                    );
-                  },
-                ),
+                      itemBuilder: (context, index) {
+                        // final item = controller.itemList[index];
+                        // final imageKey = GlobalKey();
+
+                        return InkWell(
+                          onTap: () {
+                            // controller.onItemTap(item);
+                            // final imageBox = imageKey.currentContext!
+                            //     .findRenderObject() as RenderBox;
+                            // final bayarBox = bayarKey.currentContext!
+                            //     .findRenderObject() as RenderBox;
+
+                            // controller.startAnimation(
+                            //   context: context,
+                            //   imageBox: imageBox,
+                            //   bayarBox: bayarBox,
+                            // );
+                          },
+                          child: Card(
+                            elevation: 5,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 80,
+                                    // width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.grey[300],
+                                      image: const DecorationImage(
+                                        image: AssetImage('assets/esteh.png'),
+                                        // fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Es Teh',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Rp. 4.000',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  // SizedBox(
+                  //   height: 05,
+                  // ),
+                ]),
               ),
-              SizedBox(
-                height: 05,
-              ),
-              GestureDetector(
+            ),
+          ),
+          Positioned(
+            bottom: 5,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: GestureDetector(
                 onTap: () {
                   Get.toNamed(Routes.DETAIL_PEMESANAN);
                 },
                 child: Container(
-                  height: 60,
-                  width: 400,
+                  height: 55,
+                  width: 350,
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 50),
                   decoration: BoxDecoration(
-                    color: Color(0xff303030),
+                    color: Color(0xff1a237e),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -485,9 +384,9 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
               ),
-            ]),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
