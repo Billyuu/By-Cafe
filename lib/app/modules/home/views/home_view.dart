@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:bycafe/app/routes/app_pages.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:bycafe/app/modules/detail_pemesanan/views/detail_pemesanan_view.dart';
 
 import '../controllers/home_controller.dart';
@@ -15,7 +17,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff3949ab),
+        backgroundColor: Color.fromARGB(255, 29, 34, 65),
         title: Text(
           'ByCafe',
           style: TextStyle(fontFamily: 'pacifico', color: Colors.white),
@@ -28,7 +30,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-      backgroundColor: Color(0xff3949ab),
+      backgroundColor: Color.fromARGB(255, 29, 34, 65),
       drawer: Drawer(
         child: Column(
           children: [
@@ -94,9 +96,19 @@ class HomeView extends GetView<HomeController> {
                     onTap: () {},
                   ),
                   ListTile(
-                    leading: Icon(Iconsax.logout_copy),
-                    title: Text('Lougout'),
-                    onTap: () {},
+                    leading: const Icon(Iconsax.logout_copy),
+                    title: const Text('Logout'),
+                    onTap: () async {
+                      try {
+                        // Melakukan logout
+                        await FirebaseAuth.instance.signOut();
+                        Get.offAllNamed(Routes.LOGIN);
+                        Get.snackbar('Berhasil', 'Anda telah berhasil logout');
+                      } catch (e) {
+                        // Tangani error jika ada
+                        Get.snackbar('Error', 'Gagal logout. Coba lagi nanti.');
+                      }
+                    },
                   ),
                 ],
               ),

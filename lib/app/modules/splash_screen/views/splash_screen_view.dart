@@ -65,7 +65,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                   height: 65,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Get.toNamed(Routes.HOME);
+                      Get.offNamed(Routes.LOGIN);
                     },
                     label: Text(
                       'Get Started',

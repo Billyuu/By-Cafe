@@ -9,6 +9,8 @@ abstract class Routes {
   static const LOGIN = _Paths.LOGIN;
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
   static const MENU_PENJUALAN = _Paths.MENU_PENJUALAN;
+  static const REGISTER = _Paths.REGISTER;
+  static const RESET_PASSWORD = _Paths.RESET_PASSWORD;
 }
 
 abstract class _Paths {
@@ -19,4 +21,6 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const SPLASH_SCREEN = '/splash-screen';
   static const MENU_PENJUALAN = '/menu-penjualan';
+  static const REGISTER = '/register';
+  static const RESET_PASSWORD = '/reset-password';
 }

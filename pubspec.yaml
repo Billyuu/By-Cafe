@@ -38,6 +38,8 @@ dependencies:
   get: ^4.7.2
   iconsax_flutter: ^1.0.0
   carousel_slider: ^5.0.0
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.3
 
 dev_dependencies:
   flutter_test:
