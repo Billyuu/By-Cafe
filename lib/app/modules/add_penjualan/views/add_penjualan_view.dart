@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/add_penjualan_controller.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class AddPenjualanView extends GetView<AddPenjualanController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Notes'),
+        backgroundColor: const Color(0xff303030),
+        title: const Text(
+          'Tambahkan Produk',
+          style: TextStyle(fontFamily: 'calfont', color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(Iconsax.arrow_left_2_copy, color: Colors.white),
+          onPressed: () {
+            Get.back();
+          },
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -30,56 +40,9 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Column(
-                children: [
-                  Obx(
-                    () => ToggleButtons(
-                      isSelected: [
-                        controller.selectedIcon.value == '😊',
-                        controller.selectedIcon.value == '😡',
-                        controller.selectedIcon.value == '😐',
-                      ],
-                      onPressed: (int index) {
-                        switch (index) {
-                          case 0:
-                            controller.selectedIcon.value = '😊';
-                            break;
-                          case 1:
-                            controller.selectedIcon.value = '😡';
-                            break;
-                          case 2:
-                            controller.selectedIcon.value = '😐';
-                            break;
-                        }
-                      },
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('😊', style: TextStyle(fontSize: 36)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('😡', style: TextStyle(fontSize: 36)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('😐', style: TextStyle(fontSize: 36)),
-                        ),
-                      ],
-                      color: Colors.black,
-                      selectedColor: Colors.white,
-                      fillColor: Colors.blue,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                controller: controller.titleController,
+                controller: controller.namaController,
                 decoration: InputDecoration(
                   labelText: 'Nama',
                   border: OutlineInputBorder(),
@@ -97,8 +60,7 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
               child: TextField(
-                controller: controller.momentsController,
-                maxLines: 5,
+                controller: controller.hargaController,
                 decoration: InputDecoration(
                   labelText: 'Harga',
                   border: OutlineInputBorder(),
@@ -114,13 +76,13 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
               ),
             ),
             Container(
-              height: 50,
+              height: 70,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
                   controller.addData(
-                    controller.titleController.text,
-                    controller.momentsController.text,
+                    controller.namaController.text,
+                    controller.hargaController.text,
                   );
                 },
                 style: ElevatedButton.styleFrom(

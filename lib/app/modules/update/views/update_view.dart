@@ -1,144 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/update_controller.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class UpdateView extends GetView<UpdateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Post'),
+        backgroundColor: const Color(0xff303030),
+        title: const Text(
+          'Update Produk',
+          style: TextStyle(fontFamily: 'calfont', color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(Iconsax.arrow_left_2_copy, color: Colors.white),
+          onPressed: () {
+            Get.back();
+          },
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // Heading Text
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  "Describe",
-                  style: TextStyle(
-                    fontSize: 20, // Slightly larger text
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
+            TextFormField(
+              initialValue: controller.namaAwal,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                labelText: 'Nama Produk',
+                labelStyle: const TextStyle(color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
                 ),
               ),
+              style: const TextStyle(color: Colors.black),
+              textInputAction: TextInputAction.next,
+              onChanged: (value) {
+                controller.nama.value = value;
+              },
             ),
-
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Column(
-                children: [
-                  Obx(
-                    () => ToggleButtons(
-                      isSelected: [
-                        controller.selectedIcon.value == '😊',
-                        controller.selectedIcon.value == '😡',
-                        controller.selectedIcon.value == '😐',
-                      ],
-                      onPressed: (int index) {
-                        switch (index) {
-                          case 0:
-                            controller.selectedIcon.value = '😊';
-                            break;
-                          case 1:
-                            controller.selectedIcon.value = '😡';
-                            break;
-                          case 2:
-                            controller.selectedIcon.value = '😐';
-                            break;
-                        }
-                      },
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('😊', style: TextStyle(fontSize: 36)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('😡', style: TextStyle(fontSize: 36)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('😐', style: TextStyle(fontSize: 36)),
-                        ),
-                      ],
-                      color: Colors.white, 
-                      selectedColor: Colors.blue, 
-                      borderRadius: BorderRadius.circular(8), 
-                    ),
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 20,
             ),
-
-            // Title Input
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextFormField(
-                initialValue: controller.judul,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  labelText: 'Title',
-                  labelStyle: const TextStyle(color: Colors.black),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                  ),
+            TextFormField(
+              initialValue: controller.hargaAwal,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                style: const TextStyle(color: Colors.black),
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {
-                  controller.title.value = value;
-                },
-              ),
-            ),
-
-            // Moment Input 
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-              child: TextFormField(
-                initialValue: controller.moment,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  labelText: 'Moments',
-                  labelStyle: const TextStyle(color: Colors.black),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                  ),
+                labelText: 'Harga Produk',
+                labelStyle: const TextStyle(color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
-                style: const TextStyle(color: Colors.black),
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {
-                  controller.momentText.value = value;
-                },
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.black, width: 2),
+                ),
               ),
+              style: const TextStyle(color: Colors.black),
+              textInputAction: TextInputAction.done,
+              onChanged: (value) {
+                controller.harga.value = value;
+              },
             ),
-
-            // Save Button
+            SizedBox(
+              height: 20,
+            ),
             Container(
               height: 50,
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -150,14 +89,13 @@ class UpdateView extends GetView<UpdateController> {
                     borderRadius: BorderRadius.circular(32.0),
                   ),
                 ),
-                child: const Text('Save Changes'),
+                child: const Text('Simpan Perubahan'),
                 onPressed: () {
-                  controller.updateData(controller.arg, controller.title.value,
-                      controller.momentText.value);
-                  print(controller.arg);
-                  print(controller.title.value);
-                  print(controller.momentText.value);
-                  print(controller.selectedIcon.value);
+                  controller.updateData(
+                    controller.docId,
+                    controller.nama.value,
+                    controller.harga.value,
+                  );
                 },
               ),
             ),

@@ -3,51 +3,45 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UpdateController extends GetxController {
-  final titleController = TextEditingController(); 
-  final momentsController = TextEditingController(); 
-  final selectedIcon = RxString('😊');
+  final namaController = TextEditingController();
+  final hargaController = TextEditingController();
 
-  final FirebaseFirestore firestore = FirebaseFirestore.instance; // Instance Firestore untuk berinteraksi dengan database
-  var arg = Get.arguments[0]; // Menerima argumen pertama (ID dokumen) dari navigasi sebelumnya
-  var judul = Get.arguments[1]; 
-  var moment = Get.arguments[2]; 
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  var title = ''.obs; // Variabel reaktif untuk judul
-  var momentText = ''.obs; 
-  var isTitle = false.obs; 
+  var docId = Get.arguments[0]; // ID dokumen dari navigasi
+  var namaAwal = Get.arguments[1]; // Nama awal
+  var hargaAwal = Get.arguments[2]; // Harga awal
 
-  // Fungsi untuk mengambil data dari Firestore berdasarkan docID
+  var nama = ''.obs;
+  var harga = ''.obs;
+
+  // Ambil dokumen Firestore berdasarkan ID
   Future<DocumentSnapshot<Object?>> getData(String docID) async {
     try {
-      DocumentSnapshot snapshot = await firestore.collection('data').doc(docID).get(); // Mengambil dokumen berdasarkan docID
+      DocumentSnapshot snapshot = await firestore.collection('data').doc(docID).get();
       if (!snapshot.exists) {
-        throw Exception('Document not found'); // Jika dokumen tidak ditemukan, lempar pengecualian
+        throw Exception('Dokumen tidak ditemukan');
       }
-      return snapshot; // Mengembalikan snapshot dokumen
+      return snapshot;
     } catch (e) {
-      print('Error fetching document: $e'); // Menampilkan pesan kesalahan jika ada error
-      throw e; // Melemparkan pengecualian kembali agar bisa ditangani di tampilan
+      print('Gagal mengambil data: $e');
+      throw e;
     }
   }
 
-  // Fungsi untuk memperbarui data di Firestore dengan judul, momen, dan ikon yang dipilih
-  Future<void> updateData(String docID, String title, String moments) async {
+  // Update data ke Firestore
+  Future<void> updateData(String docID, String nama, String harga) async {
     try {
       await firestore.collection('data').doc(docID).update({
-        'title': title, // Memperbarui judul di Firestore
-        'Moments': moments,
-        'icon': selectedIcon.value, 
+        'nama': nama,
+        'harga': harga,
       });
-      Get.back(); // Kembali ke halaman sebelumnya
-      Get.snackbar('Success', 'Data updated successfully'); 
-    } catch (e) {
-      print('Error updating data: $e'); // Menampilkan pesan kesalahan jika gagal memperbarui data
-      Get.snackbar('Error', 'Failed to update data'); 
-    }
-  }
 
-  // Fungsi untuk mengatur ikon yang dipilih
-  void setIcon(String icon) {
-    selectedIcon.value = icon; // Mengupdate nilai ikon yang dipilih
+      Get.back();
+      Get.snackbar('Sukses', 'Data berhasil diperbarui');
+    } catch (e) {
+      print('Gagal memperbarui data: $e');
+      Get.snackbar('Error', 'Gagal memperbarui data');
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // 🔥 Tambahkan ini
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bycafe/app/routes/app_pages.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
@@ -57,41 +57,21 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                   var data2 = data[index].data() as Map<String, dynamic>?;
 
                   if (data2 != null &&
-                      data2.containsKey('title') &&
-                      data2.containsKey('moment')) {
-                    Color cardColor = Colors.blue[100]!;
-
-                    switch (data2['icon']) {
-                      case '😊':
-                        cardColor = Colors.green[100]!;
-                        break;
-                      case '😡':
-                        cardColor = Colors.red[100]!;
-                        break;
-                      case '😐':
-                        cardColor = Colors.grey[100]!;
-                        break;
-                      default:
-                        cardColor = Colors.blue[100]!;
-                    }
-
+                      data2.containsKey('nama') &&
+                      data2.containsKey('harga')) {
                     return Card(
+                      color: Colors.white,
                       margin: EdgeInsets.zero,
                       elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      color: cardColor,
+                      // color: cardColor,
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Text(
-                            //   data2['icon'] ?? '😊',
-                            //   style: const TextStyle(fontSize: 28),
-                            // ),
-                            // const SizedBox(height: 6),
                             Text(
                               "Nama: ${data2['nama']}",
                               maxLines: 2,
@@ -121,8 +101,8 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                     Routes.UPDATE,
                                     arguments: [
                                       data[index].id,
-                                      data2['title'],
-                                      data2['moment'],
+                                      data2['nama'],
+                                      data2['harga'],
                                     ],
                                   ),
                                   icon: const Icon(Icons.edit,
