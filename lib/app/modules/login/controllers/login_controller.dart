@@ -15,20 +15,26 @@ class LoginController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
+  // Stream status login/logout
   Stream<User?> get streamAuthStatus => auth.authStateChanges();
 
+  // Fungsi untuk login dengan email dan password
   void login(String email, String password) async {
     try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      if (userCredential.user!.emailVerified) {
+      if (userCredential.user != null && userCredential.user!.emailVerified) {
         Get.snackbar('Berhasil', 'Login sukses');
         Get.offAllNamed(Routes.HOME);
       } else {
+        await auth.signOut();
         Get.snackbar('Verifikasi', 'Silakan verifikasi email Anda terlebih dahulu');
       }
-    } on FirebaseAuthException catch (e) {
-      Get.snackbar('Login Gagal', e.message ?? 'Terjadi kesalahan');
+    } on FirebaseAuthException {
+      Get.snackbar('Login Gagal', 'Periksa kembali email dan password Anda');
     }
   }
 

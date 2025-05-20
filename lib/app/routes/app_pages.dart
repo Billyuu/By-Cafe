@@ -16,6 +16,8 @@ import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
+import '../modules/update/bindings/update_binding.dart';
+import '../modules/update/views/update_view.dart';
 
 part 'app_routes.dart';
 
@@ -37,7 +39,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ADD_PENJUALAN,
-      page: () => const AddPenjualanView(),
+      page: () => AddPenjualanView(),
       binding: AddPenjualanBinding(),
     ),
     GetPage(
@@ -52,7 +54,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MENU_PENJUALAN,
-      page: () => const MenuPenjualanView(),
+      page: () => MenuPenjualanView(),
       binding: MenuPenjualanBinding(),
     ),
     GetPage(
@@ -64,6 +66,11 @@ class AppPages {
       name: _Paths.RESET_PASSWORD,
       page: () => const ResetPasswordView(),
       binding: ResetPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPDATE,
+      page: () => UpdateView(),
+      binding: UpdateBinding(),
     ),
   ];
 }

@@ -117,287 +117,281 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
       body: Stack(
-        children: [
-          Obx(
+  children: [
+    Column(
+      children: [
+        // SEARCH BAR TETAP DI ATAS
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: TextField(
+            cursorColor: Color(0xff303030),
+            decoration: InputDecoration(
+              hintText: 'Search...',
+              hintStyle: TextStyle(color: Colors.grey),
+              prefixIcon: Icon(
+                Iconsax.search_favorite_copy,
+                color: Colors.grey,
+              ),
+              filled: true,
+              fillColor: const Color.fromARGB(255, 255, 255, 255),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: const Color(0xff303030)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide:
+                    BorderSide(color: const Color(0xff303030), width: 2),
+              ),
+            ),
+          ),
+        ),
+
+        // BAGIAN YANG BISA DI SCROLL (carousel + grid)
+        Expanded(
+          child: Obx(
             () => SingleChildScrollView(
               physics: controller.isKeyboardVisible.value
                   ? AlwaysScrollableScrollPhysics()
-                  : NeverScrollableScrollPhysics(),
+                  : BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(children: [
-                  TextField(
-                    cursorColor: Color(0xff303030),
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      prefixIcon: Icon(
-                        Iconsax.search_favorite_copy,
-                        color: Colors.grey,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 160,
+                        autoPlay: true,
+                        enlargeCenterPage: true,
+                        viewportFraction: 0.7,
+                        autoPlayInterval: const Duration(seconds: 3),
+                        onPageChanged: (index, reason) =>
+                            controller.onPageChanged(index),
                       ),
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 255, 255, 255),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: const Color(0xff303030)), // Saat tidak fokus
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: const Color(0xff303030),
-                            width: 2), // Saat fokus
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CarouselSlider(
-                    options: CarouselOptions(
-                      height: 160,
-                      autoPlay: true,
-                      enlargeCenterPage: true,
-                      viewportFraction: 0.7,
-                      autoPlayInterval: const Duration(seconds: 3),
-                      onPageChanged: (index, reason) =>
-                          controller.onPageChanged(index),
-                    ),
-                    items: controller.imageList.map((item) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 37, 37, 37),
-                              ),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Opacity(
-                                    opacity: 0.2,
-                                    child: Image.asset(
-                                      item['image']!,
-                                      fit: BoxFit.cover,
+                      items: controller.imageList.map((item) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 37, 37, 37),
+                                ),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Opacity(
+                                      opacity: 0.2,
+                                      child: Image.asset(
+                                        item['image']!,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 35),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                item['text']!,
-                                                style: TextStyle(
-                                                  fontFamily: 'calfont',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  shadows: [
-                                                    Shadow(
-                                                      blurRadius: 10.0,
-                                                      color: Colors.black,
-                                                      offset: Offset(2.0, 2.0),
-                                                    ),
-                                                  ],
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 35),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item['text']!,
+                                                  style: TextStyle(
+                                                    fontFamily: 'calfont',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      Shadow(
+                                                        blurRadius: 10.0,
+                                                        color: Colors.black,
+                                                        offset: Offset(2.0, 2.0),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(height: 3),
-                                              Text(
-                                                item['text2']!,
-                                                style: TextStyle(
-                                                  fontFamily: 'calfont',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  shadows: [
-                                                    Shadow(
-                                                      blurRadius: 10.0,
-                                                      color: Colors.black,
-                                                      offset: Offset(2.0, 2.0),
-                                                    ),
-                                                  ],
+                                                SizedBox(height: 3),
+                                                Text(
+                                                  item['text2']!,
+                                                  style: TextStyle(
+                                                    fontFamily: 'calfont',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      Shadow(
+                                                        blurRadius: 10.0,
+                                                        color: Colors.black,
+                                                        offset: Offset(2.0, 2.0),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Image.asset(
-                                          item['logo']!,
-                                          width: 110,
-                                          height: 90,
-                                          // fit: BoxFit.cover,
-                                        ),
-                                      ],
+                                          Image.asset(
+                                            item['logo']!,
+                                            width: 110,
+                                            height: 90,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  Obx(() => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:
-                            controller.imageList.asMap().entries.map((entry) {
-                          return GestureDetector(
-                            onTap: () => _controller.animateToPage(entry.key),
-                            child: Container(
-                              width: 7.0,
-                              height: 7.0,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 4.0),
-                              decoration: BoxDecoration(
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+
+                    Obx(() => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: controller.imageList
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                            return GestureDetector(
+                              onTap: () => _controller.animateToPage(entry.key),
+                              child: Container(
+                                width: 7.0,
+                                height: 7.0,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 4.0),
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: (Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? Colors.white
                                           : Colors.black)
-                                      .withOpacity(
-                                          controller.currentIndex == entry.key
-                                              ? 0.9
-                                              : 0.4)),
-                            ),
-                          );
-                        }).toList(),
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: Get.height * .57,
-                    child: GridView.builder(
-                      itemCount: 20,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Jumlah kolom
-                      ),
-                      itemBuilder: (context, index) {
-                        // final item = controller.itemList[index];
-                        // final imageKey = GlobalKey();
+                                      .withOpacity(controller.currentIndex ==
+                                              entry.key
+                                          ? 0.9
+                                          : 0.4),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        )),
 
-                        return InkWell(
-                          onTap: () {
-                            // controller.onItemTap(item);
-                            // final imageBox = imageKey.currentContext!
-                            //     .findRenderObject() as RenderBox;
-                            // final bayarBox = bayarKey.currentContext!
-                            //     .findRenderObject() as RenderBox;
+                    SizedBox(height: 10),
 
-                            // controller.startAnimation(
-                            //   context: context,
-                            //   imageBox: imageBox,
-                            //   bayarBox: bayarBox,
-                            // );
-                          },
-                          child: Card(
-                            elevation: 5,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 80,
-                                    // width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.grey[300],
-                                      image: const DecorationImage(
-                                        image: AssetImage('assets/esteh.png'),
-                                        // fit: BoxFit.cover,
+                    SizedBox(
+                      // height: 2000,
+                      child: GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 20,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {},
+                            child: Card(
+                              elevation: 5,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.grey[300],
+                                        image: const DecorationImage(
+                                          image: AssetImage('assets/esteh.png'),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Es Teh',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      'Es Teh',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    'Rp. 4.000',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                      'Rp. 4.000',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  // SizedBox(
-                  //   height: 05,
-                  // ),
-                ]),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 5,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  Get.toNamed(Routes.DETAIL_PEMESANAN);
-                },
-                child: Container(
-                  height: 55,
-                  width: 350,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  decoration: BoxDecoration(
-                    color: Color(0xff1a237e),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'BAYAR',
-                        style: TextStyle(fontSize: 17, color: Colors.white),
-                      ),
-                      Text(
-                        'Rp. 50.000 (1 item)',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+                    SizedBox(height: 100), // ruang bawah agar tidak tertutup tombol
+                  ],
                 ),
               ),
             ),
           ),
+        ),
+      ],
+    ),
+
+    // Posisi tombol bayar tetap di bawah layar
+    Positioned(
+      bottom: 5,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: GestureDetector(
+          onTap: () {
+            Get.toNamed(Routes.DETAIL_PEMESANAN);
+          },
+          child: Container(
+            height: 55,
+            width: 350,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 50),
+            decoration: BoxDecoration(
+              color: Color(0xff1a237e),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'BAYAR',
+                  style: TextStyle(fontSize: 17, color: Colors.white),
+                ),
+                Text(
+                  'Rp. 50.000 (1 item)',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+
         ],
       ),
     );

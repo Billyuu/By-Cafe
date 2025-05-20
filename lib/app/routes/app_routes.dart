@@ -11,6 +11,7 @@ abstract class Routes {
   static const MENU_PENJUALAN = _Paths.MENU_PENJUALAN;
   static const REGISTER = _Paths.REGISTER;
   static const RESET_PASSWORD = _Paths.RESET_PASSWORD;
+  static const UPDATE = _Paths.UPDATE;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const MENU_PENJUALAN = '/menu-penjualan';
   static const REGISTER = '/register';
   static const RESET_PASSWORD = '/reset-password';
+  static const UPDATE = '/update';
 }

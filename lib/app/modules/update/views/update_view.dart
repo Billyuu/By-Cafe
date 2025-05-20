@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/add_penjualan_controller.dart';
+import '../controllers/update_controller.dart';
 
-class AddPenjualanView extends GetView<AddPenjualanController> {
+class UpdateView extends GetView<UpdateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Notes'),
+        title: const Text('Update Post'),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
@@ -16,19 +16,25 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
+            // Heading Text
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  "Describe how you're feeling now",
+                  "Describe",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20, // Slightly larger text
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.blue,
                   ),
                 ),
               ),
             ),
+
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Column(
@@ -67,62 +73,76 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
                           child: Text('😐', style: TextStyle(fontSize: 36)),
                         ),
                       ],
-                      color: Colors.black,
-                      selectedColor: Colors.white,
-                      fillColor: Colors.blue,
-                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white, 
+                      selectedColor: Colors.blue, 
+                      borderRadius: BorderRadius.circular(8), 
                     ),
                   ),
                 ],
               ),
             ),
+
+            // Title Input
             Container(
               padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: controller.titleController,
+              child: TextFormField(
+                initialValue: controller.judul,
                 decoration: InputDecoration(
-                  labelText: 'Nama',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  labelText: 'Title',
+                  labelStyle: const TextStyle(color: Colors.black),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: Colors.black, width: 2),
                   ),
                 ),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
                 textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  controller.title.value = value;
+                },
               ),
             ),
+
+            // Moment Input 
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-              child: TextField(
-                controller: controller.momentsController,
-                maxLines: 5,
+              child: TextFormField(
+                initialValue: controller.moment,
                 decoration: InputDecoration(
-                  labelText: 'Harga',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  labelText: 'Moments',
+                  labelStyle: const TextStyle(color: Colors.black),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: Colors.black, width: 2),
                   ),
                 ),
-                style: TextStyle(color: Colors.black),
-                textInputAction: TextInputAction.done,
+                style: const TextStyle(color: Colors.black),
+                textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  controller.momentText.value = value;
+                },
               ),
             ),
+
+            // Save Button
             Container(
               height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: ElevatedButton(
-                onPressed: () {
-                  controller.addData(
-                    controller.titleController.text,
-                    controller.momentsController.text,
-                  );
-                },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
@@ -130,7 +150,15 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
                     borderRadius: BorderRadius.circular(32.0),
                   ),
                 ),
-                child: const Text('Save'),
+                child: const Text('Save Changes'),
+                onPressed: () {
+                  controller.updateData(controller.arg, controller.title.value,
+                      controller.momentText.value);
+                  print(controller.arg);
+                  print(controller.title.value);
+                  print(controller.momentText.value);
+                  print(controller.selectedIcon.value);
+                },
               ),
             ),
           ],
