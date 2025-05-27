@@ -8,14 +8,13 @@ class UpdateController extends GetxController {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  var docId = Get.arguments[0]; // ID dokumen dari navigasi
+  var docId = Get.arguments[0]; // ID dokumen 
   var namaAwal = Get.arguments[1]; // Nama awal
   var hargaAwal = Get.arguments[2]; // Harga awal
 
   var nama = ''.obs;
   var harga = ''.obs;
 
-  // Ambil dokumen Firestore berdasarkan ID
   Future<DocumentSnapshot<Object?>> getData(String docID) async {
     try {
       DocumentSnapshot snapshot = await firestore.collection('data').doc(docID).get();

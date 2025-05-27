@@ -1,46 +1,132 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class AddPenjualanController extends GetxController {
-  // Controller untuk input nama dan harga produk
-  final namaController = TextEditingController(); // Nama produk
-  final hargaController = TextEditingController(); // Harga produk
+  final namaController = TextEditingController();
+  final hargaController = TextEditingController();
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
 
-  // Menambahkan data produk baru ke koleksi 'data'
-  void addData(String nama, String harga) async {
-    if (nama.isNotEmpty && harga.isNotEmpty) {
-      try {
-        await firestore.collection('data').add({
-          'nama': nama, 
-          'harga': harga,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
+  Rx<File?> selectedImage = Rx<File?>(null);
 
-        // Bersihkan form setelah submit
-        namaController.clear();
-        hargaController.clear();
+  var isUploading = false.obs;
+  var uploadImageUrl = ''.obs;
+  var isPicking = false;
 
-        Get.snackbar(
-          "Sukses",
-          "Produk berhasil ditambahkan.",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      } catch (e) {
-        Get.snackbar(
-          "Error",
-          "Gagal menambahkan produk: $e",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+  final cloudName = 'dvndkijbe2';
+  final uploadPreset = 'bycare';
+
+  // Fungsi untuk memilih gambar dari galeri
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      selectedImage.value = File(pickedFile.path);
+      isUploading(true);
+
+      final url =
+          Uri.parse('https://api.cloudinary.com/v1_1/dvndkjbe2/image/upload');
+      final request = http.MultipartRequest('POST', url)
+        ..fields['upload_preset'] = 'bycafe'
+        ..files.add(await http.MultipartFile.fromPath('file', pickedFile.path));
+
+      final response = await request.send();
+      isUploading(false);
+
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final data = json.decode(responseData);
+        uploadImageUrl.value = data['secure_url'];
+        Get.snackbar('Sukses', 'Berhasil upload gambar!');
+      } else {
+        Get.snackbar('Error', 'Upload gagal: ${response.statusCode}');
+        print('Upload failed: ${response.statusCode}');
       }
     } else {
-      Get.snackbar(
-        "Error",
-        "Nama dan harga harus diisi.",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar("Info", "Tidak ada gambar yang dipilih");
+    }
+  }
+
+  Future<void> pickAndUploadImage() async {
+    //   var status = await Permission.storage.request();
+    // if (!status.isGranted) {
+    //   Get.snackbar('Permission Denied', 'Storage permission is required');
+    //   return;
+    // }
+
+    if (isPicking) return;
+    isPicking = true;
+
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile == null) return;
+
+      File imageFile = File(pickedFile.path);
+      isUploading(true);
+
+      final url =
+          Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
+      final request = http.MultipartRequest('POST', url)
+        ..fields['upload_preset'] = uploadPreset
+        ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+      final response = await request.send();
+
+      isUploading(false);
+
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final data = json.decode(responseData);
+        uploadImageUrl.value = data['secure_url'];
+        Get.snackbar('sukses', 'berhasil upload');
+      } else {
+        Get.snackbar('Error', 'upload gagal: ${response.statusCode}');
+      }
+    } catch (e) {
+      isPicking = false;
+      print('ERROR INI COY: $e');
+    }
+  }
+  // Fungsi untuk menambahkan data produk
+  Future<void> addData(String nama, String harga) async {
+    if (nama.isEmpty || harga.isEmpty) {
+      Get.snackbar("Error", "Nama dan harga harus diisi.");
+      return;
+    }
+
+    try {
+      // if (selectedImage.value != null) {
+      //   imageUrl = await uploadImage(selectedImage.value!);
+      // }
+
+      await firestore.collection('data').add({
+        'nama': nama,
+        'harga': harga,
+        'imageUrl': uploadImageUrl.value.isEmpty
+            ? ''
+            : uploadImageUrl.value, // Kosong jika tidak ada gambar
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      // Reset form
+      namaController.clear();
+      hargaController.clear();
+      uploadImageUrl.value = '';
+
+      Get.snackbar("Sukses", "Produk berhasil ditambahkan.");
+      Get.back();
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menambahkan produk: $e");
     }
   }
 }

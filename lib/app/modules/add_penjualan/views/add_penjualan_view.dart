@@ -26,9 +26,9 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Center(
+            const Center(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: EdgeInsets.only(bottom: 8.0),
                 child: Text(
                   "Describe how you're feeling now",
                   style: TextStyle(
@@ -39,61 +39,74 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: controller.namaController,
-                decoration: InputDecoration(
-                  labelText: 'Nama',
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+
+            // Tombol dan Preview Gambar
+            Obx(() {
+              return Column(
+                children: [
+                  controller.selectedImage.value != null
+                      ? Image.file(
+                          controller.selectedImage.value!,
+                          height: 200,
+                        )
+                      : const Text("Belum ada gambar dipilih"),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: controller.pickImage,
+                    icon: const Icon(Icons.image),
+                    label: const Text("Pilih Gambar"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[800],
+                      foregroundColor: Colors.white,
+                      
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: TextStyle(color: Colors.black),
-                textInputAction: TextInputAction.next,
+                ],
+              );
+            }),
+
+            const SizedBox(height: 20),
+
+            // Input Nama
+            TextField(
+              controller: controller.namaController,
+              decoration: const InputDecoration(
+                labelText: 'Nama',
+                border: OutlineInputBorder(),
               ),
+              style: const TextStyle(color: Colors.black),
+              textInputAction: TextInputAction.next,
             ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-              child: TextField(
-                controller: controller.hargaController,
-                decoration: InputDecoration(
-                  labelText: 'Harga',
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: TextStyle(color: Colors.black),
-                textInputAction: TextInputAction.done,
+            const SizedBox(height: 20),
+
+            // Input Harga
+            TextField(
+              controller: controller.hargaController,
+              decoration: const InputDecoration(
+                labelText: 'Harga',
+                border: OutlineInputBorder(),
               ),
+              style: const TextStyle(color: Colors.black),
+              textInputAction: TextInputAction.done,
             ),
-            Container(
-              height: 70,
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  controller.addData(
-                    controller.namaController.text,
-                    controller.hargaController.text,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
-                  ),
+            const SizedBox(height: 20),
+
+            // Tombol Simpan
+            ElevatedButton(
+              onPressed: () {
+                controller.addData(
+                  controller.namaController.text,
+                  controller.hargaController.text,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
                 ),
-                child: const Text('Save'),
               ),
+              child: const Text('Save'),
             ),
           ],
         ),

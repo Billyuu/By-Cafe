@@ -171,7 +171,7 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                         style: TextStyle(fontSize: 19, color: Colors.white),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

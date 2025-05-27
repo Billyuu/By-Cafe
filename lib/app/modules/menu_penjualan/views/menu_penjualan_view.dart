@@ -50,7 +50,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio:
-                      3 / 3, // Lebar 3, tinggi 2 (bisa disesuaikan)
+                      3 / 4, // Lebar 3, tinggi 2 (bisa disesuaikan)
                 ),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
@@ -68,10 +68,31 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                       ),
                       // color: cardColor,
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            if (data2['imageUrl'] != null &&
+                                data2['imageUrl'] != "")
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  data2['imageUrl'],
+                                  height: 100,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.broken_image),
+                                ),
+                              )
+                            else
+                              const SizedBox(
+                                height: 100,
+                                child: Center(
+                                  child: Icon(Icons.image_not_supported),
+                                ),
+                              ),
+                            const SizedBox(height: 8),
                             Text(
                               "Nama: ${data2['nama']}",
                               maxLines: 2,
