@@ -4,6 +4,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeController extends GetxController {
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  var userData = {}.obs;
+  // Variabel reaktif untuk menyimpan data pengguna
+
+  //mengambil data
+  Stream<QuerySnapshot<Object?>> streamData() {
+    // Fungsi untuk mengambil data secara real-time dari koleksi 'data' di Firestore.
+    CollectionReference data = firestore.collection(
+        'data'); // Data akan diurutkan berdasarkan field 'createdAt' dan dikirimkan dalam bentuk stream.
+    return data
+        .orderBy('createdAt', descending: true)
+        .snapshots(); // Stream ini akan mengirimkan pembaruan secara otomatis ketika data berubah.
+  }
+  
   // Variabel untuk slider
   final isKeyboardVisible = false.obs;
   final textFocus = FocusNode();
@@ -61,4 +76,7 @@ class HomeController extends GetxController {
       }
     }
   }
+
+
+  
 }

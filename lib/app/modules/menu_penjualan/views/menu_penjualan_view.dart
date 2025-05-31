@@ -50,7 +50,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio:
-                      3 / 4, // Lebar 3, tinggi 2 (bisa disesuaikan)
+                      2 / 3, // Lebar 3, tinggi 2 (bisa disesuaikan)
                 ),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
