@@ -124,6 +124,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                       data[index].id,
                                       data2['nama'],
                                       data2['harga'],
+                                      data2['imageUrl'],
                                     ],
                                   ),
                                   icon: const Icon(Icons.edit,

@@ -26,6 +26,34 @@ class UpdateView extends GetView<UpdateController> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
+            Obx(() {
+              return Column(
+                children: [
+                  controller.selectedImage.value != null
+                      ? Image.file(
+                          controller.selectedImage.value!,
+                          height: 200,
+                        )
+                      : const Text("Belum ada gambar dipilih"),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      controller.isUploading.value = true;
+                      controller.pickImage();
+                    },
+                    icon: const Icon(Icons.image),
+                    label: const Text("Pilih Gambar"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[800],
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              );
+            }),
+            SizedBox(
+              height: 20,
+            ),
             TextFormField(
               initialValue: controller.namaAwal,
               decoration: InputDecoration(
@@ -78,27 +106,31 @@ class UpdateView extends GetView<UpdateController> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              height: 50,
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
+            Obx(
+              () => Container(
+                height: 50,
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
+                    ),
                   ),
+                  onPressed: controller.isUploading.value
+                      ? null
+                      : () {
+                          controller.updateData(
+                            controller.docId,
+                            controller.nama.value,
+                            controller.harga.value,
+                          );
+                        },
+                  child: const Text('Simpan Perubahan'),
                 ),
-                child: const Text('Simpan Perubahan'),
-                onPressed: () {
-                  controller.updateData(
-                    controller.docId,
-                    controller.nama.value,
-                    controller.harga.value,
-                  );
-                },
               ),
-            ),
+            )
           ],
         ),
       ),

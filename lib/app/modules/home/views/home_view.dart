@@ -31,7 +31,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.white,
       drawer: Drawer(
         child: Container(
           color: Colors.white,
@@ -123,7 +123,7 @@ class HomeView extends GetView<HomeController> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
+            Padding( //algoia firebase
               padding: const EdgeInsets.all(10),
               child: TextField(
                 cursorColor: Color(0xff303030),
@@ -149,6 +149,7 @@ class HomeView extends GetView<HomeController> {
                         BorderSide(color: const Color(0xff303030), width: 2),
                   ),
                 ),
+                onChanged: (value) => controller.searchText.value = value,
               ),
             ),
             Expanded(
@@ -295,13 +296,20 @@ class HomeView extends GetView<HomeController> {
                             ConnectionState.active) {
                           if (snapshot.hasData &&
                               snapshot.data!.docs.isNotEmpty) {
-                            var data = snapshot.data!.docs;
+                            // var data = snapshot.data!.docs;
+                            final filtered =
+                                controller.filterData(snapshot.data!.docs);
 
+                            if (filtered.isEmpty) {
+                              return const Center(
+                                child: Text('Tidak ada hasil pencarian'),
+                              );
+                            }
                             return GridView.builder(
                               shrinkWrap: true,
                               physics:
                                   const NeverScrollableScrollPhysics(), // penting!
-                              itemCount: data.length,
+                              itemCount: filtered.length,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
@@ -310,7 +318,7 @@ class HomeView extends GetView<HomeController> {
                                 childAspectRatio: 7 / 8,
                               ),
                               itemBuilder: (context, index) {
-                                final doc = data[index].data();
+                                final doc = filtered[index].data();
                                 if (doc is! Map<String, dynamic>)
                                   return const SizedBox();
 
@@ -330,29 +338,58 @@ class HomeView extends GetView<HomeController> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        if (imageUrl != null && imageUrl != '')
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              imageUrl,
-                                              height: 100,
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error,
-                                                      stackTrace) =>
-                                                  const Icon(
-                                                      Icons.broken_image),
+                                        Stack(
+                                          children: [
+                                            if (imageUrl != null &&
+                                                imageUrl != '')
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Image.network(
+                                                  imageUrl,
+                                                  height: 100,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      const Icon(
+                                                          Icons.broken_image),
+                                                ),
+                                              )
+                                            else
+                                              const SizedBox(
+                                                height: 100,
+                                                child: Center(
+                                                  child: Icon(Icons
+                                                      .image_not_supported),
+                                                ),
+                                              ),
+                                            Positioned(
+                                              top: 5,
+                                              right: 5,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  print(
+                                                      'Favorit ditekan pada: $nama');
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white70,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.favorite_border,
+                                                    color: Colors.red,
+                                                    size:
+                                                        16, // Ukuran ikon diperkecil
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          )
-                                        else
-                                          const SizedBox(
-                                            height: 100,
-                                            child: Center(
-                                              child: Icon(
-                                                  Icons.image_not_supported),
-                                            ),
-                                          ),
+                                          ],
+                                        ),
                                         const SizedBox(height: 8),
                                         Text(
                                           nama,
@@ -401,7 +438,7 @@ class HomeView extends GetView<HomeController> {
             Get.toNamed(Routes.DETAIL_PEMESANAN);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor:  Colors.blue,
+            backgroundColor: Colors.blue,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

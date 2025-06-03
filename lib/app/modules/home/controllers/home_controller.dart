@@ -4,22 +4,29 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeController extends GetxController {
-FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   var userData = {}.obs;
-  // Variabel reaktif untuk menyimpan data pengguna
 
-  //mengambil data
-  Stream<QuerySnapshot<Object?>> streamData() {
-    // Fungsi untuk mengambil data secara real-time dari koleksi 'data' di Firestore.
-    CollectionReference data = firestore.collection(
-        'data'); // Data akan diurutkan berdasarkan field 'createdAt' dan dikirimkan dalam bentuk stream.
-    return data
-        .orderBy('createdAt', descending: true)
-        .snapshots(); // Stream ini akan mengirimkan pembaruan secara otomatis ketika data berubah.
+  var searchText = ''.obs;
+
+
+  List<QueryDocumentSnapshot> filterData(
+      List<QueryDocumentSnapshot> originalData) {
+    if (searchText.value.isEmpty) return originalData;
+    return originalData.where((doc) {
+      final nama = (doc['nama'] ?? '').toString().toLowerCase();
+      return nama.contains(searchText.value.toLowerCase());
+    }).toList();
   }
-  
-  // Variabel untuk slider
+
+  // Stream untuk mengambil data dari Firestore
+  Stream<QuerySnapshot<Object?>> streamData() {
+    CollectionReference data = firestore.collection('data');
+    return data.orderBy('createdAt', descending: true).snapshots();
+  }
+
+  // Untuk slider
   final isKeyboardVisible = false.obs;
   final textFocus = FocusNode();
   var currentIndex = 0.obs;
@@ -45,22 +52,30 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
     },
   ];
 
-  // Variabel untuk menyimpan user info
   var username = ''.obs;
   var email = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    getUserData(); // Panggil saat controller pertama kali dijalankan
+  // Favorite logic
+  var favoriteStatus = <bool>[].obs;
+
+  void initFavorites(int length) {
+    favoriteStatus.value = List.generate(length, (index) => false);
   }
 
-  // Mengubah index page
+  void toggleFavorite(int index) {
+    favoriteStatus[index] = !favoriteStatus[index];
+  }
+
   void onPageChanged(int index) {
     currentIndex.value = index;
   }
 
-  // Ambil data user dari Firebase Authentication dan Firestore
+  @override
+  void onInit() {
+    super.onInit();
+    getUserData();
+  }
+
   void getUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -76,7 +91,4 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
       }
     }
   }
-
-
-  
 }
