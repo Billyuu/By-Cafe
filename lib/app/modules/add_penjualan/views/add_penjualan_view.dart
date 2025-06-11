@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/add_penjualan_controller.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:flutter/services.dart'; 
 
 class AddPenjualanView extends GetView<AddPenjualanController> {
   @override
@@ -110,9 +111,14 @@ class AddPenjualanView extends GetView<AddPenjualanController> {
                 const SizedBox(height: 20),
 
                 // Input Harga
+
                 TextField(
                   cursorColor: Colors.black,
                   controller: controller.hargaController,
+                  keyboardType: TextInputType.number, //keyboard angka
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly
+                  ], // ⬅️ Membatasi input hanya angka
                   decoration: InputDecoration(
                     labelText: 'Harga',
                     labelStyle: const TextStyle(color: Colors.black),

@@ -4,9 +4,8 @@ import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:bycafe/app/routes/app_pages.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:bycafe/app/modules/detail_pemesanan/views/detail_pemesanan_view.dart';
+import 'package:intl/intl.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -123,7 +122,8 @@ class HomeView extends GetView<HomeController> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding( //algoia firebase
+            Padding(
+              //algoia firebase
               padding: const EdgeInsets.all(10),
               child: TextField(
                 cursorColor: Color(0xff303030),
@@ -296,19 +296,17 @@ class HomeView extends GetView<HomeController> {
                             ConnectionState.active) {
                           if (snapshot.hasData &&
                               snapshot.data!.docs.isNotEmpty) {
-                            // var data = snapshot.data!.docs;
                             final filtered =
                                 controller.filterData(snapshot.data!.docs);
 
                             if (filtered.isEmpty) {
                               return const Center(
-                                child: Text('Tidak ada hasil pencarian'),
-                              );
+                                  child: Text('Tidak ada hasil pencarian'));
                             }
+
                             return GridView.builder(
                               shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // penting!
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: filtered.length,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
@@ -326,90 +324,270 @@ class HomeView extends GetView<HomeController> {
                                 final harga = doc['harga'] ?? '0';
                                 final imageUrl = doc['imageUrl'];
 
-                                return Card(
-                                  elevation: 5,
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            if (imageUrl != null &&
-                                                imageUrl != '')
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                child: Image.network(
-                                                  imageUrl,
-                                                  height: 100,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (context, error,
-                                                          stackTrace) =>
-                                                      const Icon(
-                                                          Icons.broken_image),
+                                return GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      backgroundColor: Colors.white,
+                                      context: context,
+                                      isScrollControlled: true,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20)),
+                                      ),
+                                      builder: (_) {
+                                        final controller =
+                                            Get.find<HomeController>();
+
+                                        RxInt quantity = 1.obs;
+                                        RxInt totalHarga = RxInt(harga);
+
+                                        ever(quantity, (_) {
+                                          totalHarga.value =
+                                              harga * quantity.value;
+                                        });
+
+                                        return Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (imageUrl != null &&
+                                                  imageUrl != '')
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  child: Image.network(
+                                                    imageUrl,
+                                                    height: 220,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
-                                              )
-                                            else
-                                              const SizedBox(
-                                                height: 100,
-                                                child: Center(
-                                                  child: Icon(Icons
-                                                      .image_not_supported),
-                                                ),
+                                              const SizedBox(height: 12),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  /// Kiri: nama dan harga
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          nama,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 4),
+                                                        Text(
+                                                          'Harga: ${controller.formatRupiah(harga)}',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 16),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  /// Kanan: tombol tambah/kurang + total harga di bawahnya
+                                                  Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              if (quantity
+                                                                      .value >
+                                                                  1)
+                                                                quantity
+                                                                    .value--;
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons
+                                                                    .remove_circle,
+                                                                color:
+                                                                    Colors.red,
+                                                                size: 22),
+                                                          ),
+                                                          Obx(() => Text(
+                                                                '${quantity.value}',
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            16),
+                                                              )),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              quantity.value++;
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons
+                                                                    .add_circle,
+                                                                color: Colors
+                                                                    .green,
+                                                                size: 22),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Obx(() => Text(
+                                                            'Total: ${controller.formatRupiah(totalHarga.value)}',
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
-                                            Positioned(
-                                              top: 5,
-                                              right: 5,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  print(
-                                                      'Favorit ditekan pada: $nama');
-                                                },
+                                              const SizedBox(height: 20),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text("Tutup"),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      controller.totalBayar
+                                                              .value +=
+                                                          totalHarga.value;
+                                                      controller.totalItem
+                                                              .value +=
+                                                          quantity.value;
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text("Simpan"),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Stack(
+                                            children: [
+                                              if (imageUrl != null &&
+                                                  imageUrl != '')
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: Image.network(
+                                                    imageUrl,
+                                                    height: 100,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        const Icon(
+                                                            Icons.broken_image),
+                                                  ),
+                                                )
+                                              else
+                                                const SizedBox(
+                                                  height: 100,
+                                                  child: Center(
+                                                    child: Icon(Icons
+                                                        .image_not_supported),
+                                                  ),
+                                                ),
+                                              Positioned(
+                                                top: 5,
+                                                right: 5,
                                                 child: Container(
                                                   padding:
-                                                      const EdgeInsets.all(4),
-                                                  decoration: BoxDecoration(
+                                                      const EdgeInsets.all(7),
+                                                  decoration:
+                                                      const BoxDecoration(
                                                     color: Colors.white70,
                                                     shape: BoxShape.circle,
                                                   ),
-                                                  child: const Icon(
-                                                    Icons.favorite_border,
-                                                    color: Colors.red,
-                                                    size:
-                                                        16, // Ukuran ikon diperkecil
+                                                  child: const Text(
+                                                    '1',
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            nama,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
                                             ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          nama,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
                                           ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Rp. $harga',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Rp. $harga',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -431,500 +609,44 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(12),
         color: Colors.white,
-        child: ElevatedButton(
-          onPressed: () {
-            Get.toNamed(Routes.DETAIL_PEMESANAN);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: const Text(
-            'Bayar Sekarang',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
+        child: Obx(() => ElevatedButton(
+              onPressed: () {
+                Get.toNamed(Routes.DETAIL_PEMESANAN);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Bayar Sekarang',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Text(
+                    controller.formatRupiah(controller.totalBayar.value),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '(${controller.totalItem.value} Item)',
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            )),
       ),
     );
   }
 }
-
-      
-      
-      
-      // SingleChildScrollView(
-      //   padding: const EdgeInsets.all(10),
-      //   child: Column(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: [
-      //       TextField(
-      //         cursorColor: Color(0xff303030),
-      //         decoration: InputDecoration(
-      //           hintText: 'Search...',
-      //           hintStyle: TextStyle(color: Colors.grey),
-      //           prefixIcon: Icon(
-      //             Iconsax.search_favorite_copy,
-      //             color: Colors.grey,
-      //           ),
-      //           filled: true,
-      //           fillColor: const Color.fromARGB(255, 255, 255, 255),
-      //           border: OutlineInputBorder(
-      //             borderRadius: BorderRadius.circular(20),
-      //           ),
-      //           enabledBorder: OutlineInputBorder(
-      //             borderRadius: BorderRadius.circular(20),
-      //             borderSide: BorderSide(color: const Color(0xff303030)),
-      //           ),
-      //           focusedBorder: OutlineInputBorder(
-      //             borderRadius: BorderRadius.circular(20),
-      //             borderSide:
-      //                 BorderSide(color: const Color(0xff303030), width: 2),
-      //           ),
-      //         ),
-      //       ),
-      //       SizedBox(height: 20),
-      //       CarouselSlider(
-      //         options: CarouselOptions(
-      //           height: 160, // Jangan terlalu besar agar tetap dalam scroll
-      //           autoPlay: true,
-      //           enlargeCenterPage: true,
-      //           viewportFraction: 0.7,
-      //           autoPlayInterval: const Duration(seconds: 3),
-      //           onPageChanged: (index, reason) =>
-      //               controller.onPageChanged(index),
-      //         ),
-      //         items: controller.imageList.map((item) {
-      //           return Builder(
-      //             builder: (BuildContext context) {
-      //               return ClipRRect(
-      //                 borderRadius: BorderRadius.circular(16),
-      //                 child: Container(
-      //                   width: double.infinity,
-      //                   decoration: BoxDecoration(
-      //                     color: Color.fromARGB(255, 37, 37, 37),
-      //                   ),
-      //                   child: Stack(
-      //                     fit: StackFit.expand,
-      //                     children: [
-      //                       Opacity(
-      //                         opacity: 0.2,
-      //                         child: Image.asset(
-      //                           item['image']!,
-      //                           fit: BoxFit.cover,
-      //                         ),
-      //                       ),
-      //                       Padding(
-      //                         padding: const EdgeInsets.symmetric(
-      //                             horizontal: 15, vertical: 35),
-      //                         child: Row(
-      //                           mainAxisAlignment:
-      //                               MainAxisAlignment.spaceBetween,
-      //                           children: [
-      //                             Expanded(
-      //                               child: Column(
-      //                                 crossAxisAlignment:
-      //                                     CrossAxisAlignment.start,
-      //                                 children: [
-      //                                   Text(
-      //                                     item['text']!,
-      //                                     style: TextStyle(
-      //                                       fontFamily: 'calfont',
-      //                                       fontSize: 16,
-      //                                       fontWeight: FontWeight.bold,
-      //                                       color: Colors.white,
-      //                                       shadows: [
-      //                                         Shadow(
-      //                                           blurRadius: 10.0,
-      //                                           color: Colors.black,
-      //                                           offset: Offset(2.0, 2.0),
-      //                                         ),
-      //                                       ],
-      //                                     ),
-      //                                   ),
-      //                                   SizedBox(height: 3),
-      //                                   Text(
-      //                                     item['text2']!,
-      //                                     style: TextStyle(
-      //                                       fontFamily: 'calfont',
-      //                                       fontSize: 16,
-      //                                       fontWeight: FontWeight.bold,
-      //                                       color: Colors.white,
-      //                                       shadows: [
-      //                                         Shadow(
-      //                                           blurRadius: 10.0,
-      //                                           color: Colors.black,
-      //                                           offset: Offset(2.0, 2.0),
-      //                                         ),
-      //                                       ],
-      //                                     ),
-      //                                   ),
-      //                                 ],
-      //                               ),
-      //                             ),
-      //                             Image.asset(
-      //                               item['logo']!,
-      //                               width: 110,
-      //                               height: 90,
-      //                             ),
-      //                           ],
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ),
-      //               );
-      //             },
-      //           );
-      //         }).toList(),
-      //       ),
-      //       Obx(() => Row(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             children: controller.imageList.asMap().entries.map((entry) {
-      //               return GestureDetector(
-      //                 onTap: () => _controller.animateToPage(entry.key),
-      //                 child: Container(
-      //                   width: 7.0,
-      //                   height: 7.0,
-      //                   margin: const EdgeInsets.symmetric(
-      //                       vertical: 8.0, horizontal: 4.0),
-      //                   decoration: BoxDecoration(
-      //                     shape: BoxShape.circle,
-      //                     color: (Theme.of(context).brightness ==
-      //                                 Brightness.dark
-      //                             ? Colors.white
-      //                             : Colors.black)
-      //                         .withOpacity(controller.currentIndex == entry.key
-      //                             ? 0.9
-      //                             : 0.4),
-      //                   ),
-      //                 ),
-      //               );
-      //             }).toList(),
-      //           )),
-      //       SizedBox(height: 10),
-      //       StreamBuilder<QuerySnapshot<Object?>>(
-      //         stream: controller.streamData(),
-      //         builder: (context, snapshot) {
-      //           if (snapshot.hasError) {
-      //             return Center(child: Text('Error: ${snapshot.error}'));
-      //           }
-
-      //           if (snapshot.connectionState == ConnectionState.active) {
-      //             if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-      //               var data = snapshot.data!.docs;
-
-      //               return GridView.builder(
-      //                 shrinkWrap: true,
-      //                 physics: const NeverScrollableScrollPhysics(), // penting!
-      //                 itemCount: data.length,
-      //                 gridDelegate:
-      //                     const SliverGridDelegateWithFixedCrossAxisCount(
-      //                   crossAxisCount: 2,
-      //                   crossAxisSpacing: 10,
-      //                   mainAxisSpacing: 10,
-      //                   childAspectRatio: 7 / 8,
-      //                 ),
-      //                 itemBuilder: (context, index) {
-      //                   final doc = data[index].data();
-      //                   if (doc is! Map<String, dynamic>)
-      //                     return const SizedBox();
-
-      //                   final nama = doc['nama'] ?? 'Tanpa Nama';
-      //                   final harga = doc['harga'] ?? '0';
-      //                   final imageUrl = doc['imageUrl'];
-
-      //                   return Card(
-      //                     elevation: 5,
-      //                     color: Colors.white,
-      //                     shape: RoundedRectangleBorder(
-      //                       borderRadius: BorderRadius.circular(16),
-      //                     ),
-      //                     child: Padding(
-      //                       padding: const EdgeInsets.all(10),
-      //                       child: Column(
-      //                         crossAxisAlignment: CrossAxisAlignment.start,
-      //                         children: [
-      //                           if (imageUrl != null && imageUrl != '')
-      //                             ClipRRect(
-      //                               borderRadius: BorderRadius.circular(8),
-      //                               child: Image.network(
-      //                                 imageUrl,
-      //                                 height: 100,
-      //                                 width: double.infinity,
-      //                                 fit: BoxFit.cover,
-      //                                 errorBuilder:
-      //                                     (context, error, stackTrace) =>
-      //                                         const Icon(Icons.broken_image),
-      //                               ),
-      //                             )
-      //                           else
-      //                             const SizedBox(
-      //                               height: 100,
-      //                               child: Center(
-      //                                 child: Icon(Icons.image_not_supported),
-      //                               ),
-      //                             ),
-      //                           const SizedBox(height: 8),
-      //                           Text(
-      //                             nama,
-      //                             maxLines: 2,
-      //                             overflow: TextOverflow.ellipsis,
-      //                             style: const TextStyle(
-      //                               fontSize: 16,
-      //                               fontWeight: FontWeight.bold,
-      //                               color: Colors.black,
-      //                             ),
-      //                           ),
-      //                           const SizedBox(height: 4),
-      //                           Text(
-      //                             'Rp. $harga',
-      //                             style: const TextStyle(
-      //                               fontSize: 14,
-      //                               color: Colors.black,
-      //                             ),
-      //                           ),
-      //                         ],
-      //                       ),
-      //                     ),
-      //                   );
-      //                 },
-      //               );
-      //             } else {
-      //               return const Center(child: Text('Tidak ada menu.'));
-      //             }
-      //           }
-
-      //           return const Center(child: CircularProgressIndicator());
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      //   );
- 
-// Obx(
-      //   () => SingleChildScrollView(
-      //     physics: controller.isKeyboardVisible.value
-      //         ? AlwaysScrollableScrollPhysics()
-      //         : NeverScrollableScrollPhysics(),
-      // child: Padding(
-      // padding: const EdgeInsets.all(10),
-      // child: Column(children: [
-
-      //       SizedBox(
-      //         height: Get.height * .57,
-      //         child: GridView.builder(
-      //           itemCount: 20,
-      //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      //             crossAxisCount: 2, // Jumlah kolom
-      //           ),
-      //           itemBuilder: (context, index) {
-      //             // final item = controller.itemList[index];
-      //             // final imageKey = GlobalKey();
-
-      //             return InkWell(
-      //               onTap: () {
-      //                 // controller.onItemTap(item);
-      //                 // final imageBox = imageKey.currentContext!
-      //                 //     .findRenderObject() as RenderBox;
-      //                 // final bayarBox = bayarKey.currentContext!
-      //                 //     .findRenderObject() as RenderBox;
-
-      //                 // controller.startAnimation(
-      //                 //   context: context,
-      //                 //   imageBox: imageBox,
-      //                 //   bayarBox: bayarBox,
-      //                 // );
-      //               },
-      //               child: Card(
-      //                 elevation: 5,
-      //                 color: Colors.white,
-      //                 shape: RoundedRectangleBorder(
-      //                   borderRadius: BorderRadius.circular(24),
-      //                 ),
-      //                 child: Padding(
-      //                   padding: const EdgeInsets.all(12),
-      //                   child: Column(
-      //                     crossAxisAlignment: CrossAxisAlignment.start,
-      //                     children: [
-      //                       Container(
-      //                         height: 80,
-      //                         // width: 100,
-      //                         decoration: BoxDecoration(
-      //                           borderRadius: BorderRadius.circular(12),
-      //                           color: Colors.grey[300],
-      //                           image: const DecorationImage(
-      //                             image: AssetImage('assets/esteh.png'),
-      //                             // fit: BoxFit.cover,
-      //                           ),
-      //                         ),
-      //                       ),
-      //                       const SizedBox(height: 8),
-      //                       const Text(
-      //                         'Es Teh',
-      //                         style: TextStyle(
-      //                           fontSize: 16,
-      //                           fontWeight: FontWeight.bold,
-      //                           color: Colors.black,
-      //                         ),
-      //                       ),
-      //                       const SizedBox(height: 4),
-      //                       const Text(
-      //                         'Rp. 4.000',
-      //                         style: TextStyle(
-      //                           fontSize: 14,
-      //                           fontWeight: FontWeight.bold,
-      //                           color: Colors.black,
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ),
-      //             );
-      //           },
-      //         ),
-      //       ),
-      //       // SizedBox(
-      //       //   height: 05,
-      //       // ),
-      //     ]),
-      //   ),
-      // ),
-      // ),
-
-      // Positioned(
-      //   bottom: 5,
-      //   left: 0,
-      //   right: 0,
-      //   child: Center(
-      //     child: GestureDetector(
-      //       onTap: () {
-      //         Get.toNamed(Routes.DETAIL_PEMESANAN);
-      //       },
-      //       child: Container(
-      //         height: 55,
-      //         width: 350,
-      //         alignment: Alignment.center,
-      //         padding: EdgeInsets.symmetric(horizontal: 50),
-      //         decoration: BoxDecoration(
-      //           color: Color(0xff1a237e),
-      //           borderRadius: BorderRadius.circular(20),
-      //         ),
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //           children: const [
-      //             Text(
-      //               'BAYAR',
-      //               style: TextStyle(fontSize: 17, color: Colors.white),
-      //             ),
-      //             Text(
-      //               'Rp. 50.000 (1 item)',
-      //               style: TextStyle(fontSize: 16, color: Colors.white),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      // Obx(
-      //   () => SingleChildScrollView(
-      //     physics: controller.isKeyboardVisible.value
-      //         ? AlwaysScrollableScrollPhysics()
-      //         : NeverScrollableScrollPhysics(),
-      // child: Padding(
-      // padding: const EdgeInsets.all(10),
-      // child: Column(children: [
-
-      //       SizedBox(
-      //         height: Get.height * .57,
-      //         child: GridView.builder(
-      //           itemCount: 20,
-      //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      //             crossAxisCount: 2, // Jumlah kolom
-      //           ),
-      //           itemBuilder: (context, index) {
-      //             // final item = controller.itemList[index];
-      //             // final imageKey = GlobalKey();
-
-      //             return InkWell(
-      //               onTap: () {
-      //                 // controller.onItemTap(item);
-      //                 // final imageBox = imageKey.currentContext!
-      //                 //     .findRenderObject() as RenderBox;
-      //                 // final bayarBox = bayarKey.currentContext!
-      //                 //     .findRenderObject() as RenderBox;
-
-      //                 // controller.startAnimation(
-      //                 //   context: context,
-      //                 //   imageBox: imageBox,
-      //                 //   bayarBox: bayarBox,
-      //                 // );
-      //               },
-      //               child: Card(
-      //                 elevation: 5,
-      //                 color: Colors.white,
-      //                 shape: RoundedRectangleBorder(
-      //                   borderRadius: BorderRadius.circular(24),
-      //                 ),
-      //                 child: Padding(
-      //                   padding: const EdgeInsets.all(12),
-      //                   child: Column(
-      //                     crossAxisAlignment: CrossAxisAlignment.start,
-      //                     children: [
-      //                       Container(
-      //                         height: 80,
-      //                         // width: 100,
-      //                         decoration: BoxDecoration(
-      //                           borderRadius: BorderRadius.circular(12),
-      //                           color: Colors.grey[300],
-      //                           image: const DecorationImage(
-      //                             image: AssetImage('assets/esteh.png'),
-      //                             // fit: BoxFit.cover,
-      //                           ),
-      //                         ),
-      //                       ),
-      //                       const SizedBox(height: 8),
-      //                       const Text(
-      //                         'Es Teh',
-      //                         style: TextStyle(
-      //                           fontSize: 16,
-      //                           fontWeight: FontWeight.bold,
-      //                           color: Colors.black,
-      //                         ),
-      //                       ),
-      //                       const SizedBox(height: 4),
-      //                       const Text(
-      //                         'Rp. 4.000',
-      //                         style: TextStyle(
-      //                           fontSize: 14,
-      //                           fontWeight: FontWeight.bold,
-      //                           color: Colors.black,
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ),
-      //             );
-      //           },
-      //         ),
-      //       ),
-      //       // SizedBox(
-      //       //   height: 05,
-      //       // ),
-      //     ]),
-      //   ),
-      // ),
-      // ),
-  

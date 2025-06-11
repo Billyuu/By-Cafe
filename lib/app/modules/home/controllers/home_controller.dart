@@ -2,15 +2,34 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   var userData = {}.obs;
-
   var searchText = ''.obs;
 
+  var totalBayar = 0.obs;
+  var totalItem = 0.obs;
 
+  // Format Rupiah
+  String formatRupiah(num number) {
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp. ',
+      decimalDigits: 0,
+    );
+    return formatter.format(number);
+  }
+
+  // Stream untuk mengambil data dari Firestore
+  Stream<QuerySnapshot<Object?>> streamData() {
+    CollectionReference data = firestore.collection('data');
+    return data.orderBy('createdAt', descending: true).snapshots();
+  }
+
+  // Filter berdasarkan nama
   List<QueryDocumentSnapshot> filterData(
       List<QueryDocumentSnapshot> originalData) {
     if (searchText.value.isEmpty) return originalData;
@@ -18,12 +37,6 @@ class HomeController extends GetxController {
       final nama = (doc['nama'] ?? '').toString().toLowerCase();
       return nama.contains(searchText.value.toLowerCase());
     }).toList();
-  }
-
-  // Stream untuk mengambil data dari Firestore
-  Stream<QuerySnapshot<Object?>> streamData() {
-    CollectionReference data = firestore.collection('data');
-    return data.orderBy('createdAt', descending: true).snapshots();
   }
 
   // Untuk slider

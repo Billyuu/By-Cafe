@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/update_controller.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:flutter/services.dart'; 
 
 class UpdateView extends GetView<UpdateController> {
   @override
@@ -112,8 +113,13 @@ class UpdateView extends GetView<UpdateController> {
                 const SizedBox(height: 20),
 
                 // Input Harga Produk
+
                 TextFormField(
                   initialValue: controller.hargaAwal,
+                  keyboardType: TextInputType.number, // ⬅️ Keyboard angka
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly
+                  ], // ⬅️ Hanya angka
                   decoration: InputDecoration(
                     labelText: 'Harga Produk',
                     labelStyle: const TextStyle(color: Colors.black),

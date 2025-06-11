@@ -16,8 +16,8 @@ class UpdateController extends GetxController {
 
   var docId = Get.arguments[0]; // ID dokumen
   var namaAwal = Get.arguments[1]; // Nama awal
-  var hargaAwal = Get.arguments[2]; // Harga awal
-  var pic = Get.arguments[3];
+  var hargaAwal = Get.arguments[2].toString(); // konversi agar pasti String
+  var pic = Get.arguments[3]; // URL gambar lama
 
   var nama = ''.obs;
   var harga = ''.obs;
@@ -30,7 +30,6 @@ class UpdateController extends GetxController {
   final uploadPreset = 'bycare';
 
   Future<void> pickImage() async {
-    // isUploading();
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -74,15 +73,22 @@ class UpdateController extends GetxController {
     }
   }
 
-  // Update data ke Firestore
   Future<void> updateData(String docID, String? nama, String? harga) async {
     try {
+      // Konversi harga ke number
+      final hargaFix = (harga == null || harga.isEmpty)
+          ? num.tryParse(hargaAwal)
+          : num.tryParse(harga);
+
+      if (hargaFix == null) {
+        Get.snackbar("Error", "Harga tidak valid.");
+        return;
+      }
+
       await firestore.collection('data').doc(docID).update({
-        'nama': nama == "" ? namaAwal : nama,
-        'harga': harga == "" ? hargaAwal : harga,
-        'imageUrl': uploadImageUrl.value.isEmpty
-            ? pic
-            : uploadImageUrl.value, // Kosong jika tidak ada gambar,
+        'nama': (nama == null || nama.isEmpty) ? namaAwal : nama,
+        'harga': hargaFix, // ← disimpan sebagai number
+        'imageUrl': uploadImageUrl.value.isEmpty ? pic : uploadImageUrl.value,
       });
 
       Get.back();
@@ -91,5 +97,12 @@ class UpdateController extends GetxController {
       print('Gagal memperbarui data: $e');
       Get.snackbar('Error', 'Gagal memperbarui data');
     }
+  }
+
+  @override
+  void onClose() {
+    namaController.dispose();
+    hargaController.dispose();
+    super.onClose();
   }
 }

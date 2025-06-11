@@ -97,6 +97,7 @@ class AddPenjualanController extends GetxController {
       print('ERROR INI COY: $e');
     }
   }
+
   // Fungsi untuk menambahkan data produk
   Future<void> addData(String nama, String harga) async {
     if (nama.isEmpty || harga.isEmpty) {
@@ -105,16 +106,22 @@ class AddPenjualanController extends GetxController {
     }
 
     try {
-      // if (selectedImage.value != null) {
-      //   imageUrl = await uploadImage(selectedImage.value!);
-      // }
+      // Konversi harga ke number
+      final hargaNumber = num.tryParse(harga);
+      if (hargaNumber == null) {
+        Get.snackbar("Error", "Harga harus berupa angka.");
+        return;
+      }
+
+      // try {
+      //   // if (selectedImage.value != null) {
+      //   //   imageUrl = await uploadImage(selectedImage.value!);
+      //   // }
 
       await firestore.collection('data').add({
         'nama': nama,
-        'harga': harga,
-        'imageUrl': uploadImageUrl.value.isEmpty
-            ? ''
-            : uploadImageUrl.value, // Kosong jika tidak ada gambar
+        'harga': hargaNumber,
+        'imageUrl': uploadImageUrl.value.isEmpty ? '' : uploadImageUrl.value,
         'createdAt': FieldValue.serverTimestamp(),
       });
 

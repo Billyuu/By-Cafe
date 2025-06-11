@@ -114,35 +114,73 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                               ),
                             ),
                             const Spacer(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () => Get.toNamed(
-                                    Routes.UPDATE,
-                                    arguments: [
-                                      data[index].id,
-                                      data2['nama'],
-                                      data2['harga'],
-                                      data2['imageUrl'],
-                                    ],
+                            Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF4F4F4),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton.icon(
+                                    onPressed: () => Get.toNamed(
+                                      Routes.UPDATE,
+                                      arguments: [
+                                        data[index].id,
+                                        data2['nama'],
+                                        data2['harga'],
+                                        data2['imageUrl'],
+                                      ],
+                                    ),
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.blue, size: 16), 
+                                    label: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: 12, 
+                                      ),
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
                                   ),
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.blue),
-                                  tooltip: 'Update',
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                                IconButton(
-                                  onPressed: () =>
-                                      controller.deleteData(data[index].id),
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  tooltip: 'Delete',
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                              ],
+                                  TextButton.icon(
+                                    onPressed: () =>
+                                        controller.deleteData(data[index].id),
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red, size: 16), 
+                                    label: const Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12, 
+                                      ),
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
