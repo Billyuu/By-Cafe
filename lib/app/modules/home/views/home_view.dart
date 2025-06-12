@@ -6,6 +6,7 @@ import 'package:bycafe/app/routes/app_pages.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:bycafe/app/modules/detail_pemesanan/controllers/detail_pemesanan_controller.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -486,12 +487,11 @@ class HomeView extends GetView<HomeController> {
                                                           Colors.white,
                                                     ),
                                                     onPressed: () {
-                                                      controller.totalBayar
-                                                              .value +=
-                                                          totalHarga.value;
-                                                      controller.totalItem
-                                                              .value +=
-                                                          quantity.value;
+                                                      controller.tambahPesanan(
+                                                          nama,
+                                                          quantity.value,
+                                                          totalHarga.value);
+
                                                       Navigator.pop(context);
                                                     },
                                                     child: const Text("Simpan"),
@@ -554,14 +554,11 @@ class HomeView extends GetView<HomeController> {
                                                     color: Colors.white70,
                                                     shape: BoxShape.circle,
                                                   ),
-                                                  child: const Text(
-                                                    '1',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                  child: const Icon(
+                                                    Icons
+                                                        .favorite_border_outlined,
+                                                    size: 18,
+                                                    color: Colors.red,
                                                   ),
                                                 ),
                                               ),
@@ -616,7 +613,7 @@ class HomeView extends GetView<HomeController> {
                 Get.toNamed(Routes.DETAIL_PEMESANAN);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xff303030),
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

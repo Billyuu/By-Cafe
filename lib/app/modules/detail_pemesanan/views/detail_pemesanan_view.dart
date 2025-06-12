@@ -36,31 +36,46 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '3 x Es Teh',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Rp 4.000',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          // SizedBox(width: 8),
-                          IconButton(
-                            icon: Icon(Iconsax.trash_copy),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  Obx(() => Column(
+  children: controller.homeController.pesananList.map((pesanan) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '${pesanan['jumlah']} x ${pesanan['nama']}',
+          style: TextStyle(fontSize: 18),
+        ),
+        Row(
+          children: [
+            Text(
+              'Rp ${pesanan['totalHarga']}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            IconButton(
+              icon: const Icon(Iconsax.trash_copy),
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "Konfirmasi",
+                  middleText: "Yakin ingin menghapus pesanan ini?",
+                  textCancel: "Batal",
+                  textConfirm: "Hapus",
+                  confirmTextColor: Colors.white,
+                  onConfirm: () {
+                    controller.homeController.pesananList.remove(pesanan);
+                    controller.homeController.totalItem.value -= pesanan['jumlah'] as int;
+                    controller.homeController.totalBayar.value -= pesanan['totalHarga'] as int;
+                    Get.back();
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }).toList(),
+))
+
                 ],
               ),
             ),
@@ -86,7 +101,7 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        '6',
+                        '${controller.totalItem.value}',
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -97,16 +112,15 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Subtotal',
                         style: TextStyle(fontSize: 18),
                       ),
-                      Text(
-                        'Rp 50.000',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
+                      Obx(() => Text(
+  'Rp ${controller.homeController.totalBayar.value}',
+  style: const TextStyle(fontSize: 18),
+))
+
                     ],
                   ),
                   SizedBox(height: 10),
@@ -118,7 +132,7 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        'Rp 10.000',
+                        'Rp 0',
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -145,16 +159,16 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Total',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        'Rp 40.000',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
+                      Obx(() => Text(
+                            'Rp ${controller.totalBayar.value}',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )),
                     ],
                   ),
                   SizedBox(height: 20),

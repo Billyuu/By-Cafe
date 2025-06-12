@@ -136,7 +136,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                         data2['imageUrl'],
                                       ],
                                     ),
-                                    icon: const Icon(Icons.edit,
+                                    icon: const Icon(Iconsax.edit_copy,
                                         color: Colors.blue, size: 16), 
                                     label: const Text(
                                       'Edit',
@@ -147,7 +147,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                     ),
                                     style: TextButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
+                                          horizontal: 7, vertical: 4),
                                       minimumSize: Size.zero,
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
@@ -159,7 +159,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                   TextButton.icon(
                                     onPressed: () =>
                                         controller.deleteData(data[index].id),
-                                    icon: const Icon(Icons.delete,
+                                    icon: const Icon(Iconsax.trash_copy,
                                         color: Colors.red, size: 16), 
                                     label: const Text(
                                       'Delete',
@@ -170,7 +170,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                     ),
                                     style: TextButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
+                                          horizontal: 7, vertical: 4),
                                       minimumSize: Size.zero,
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
