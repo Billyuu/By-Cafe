@@ -5,8 +5,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:bycafe/app/routes/app_pages.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:bycafe/app/modules/detail_pemesanan/controllers/detail_pemesanan_controller.dart';
+// import 'package:intl/intl.dart';
+// import 'package:bycafe/app/modules/detail_pemesanan/controllers/detail_pemesanan_controller.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -38,7 +38,7 @@ class HomeView extends GetView<HomeController> {
           child: Column(
             children: [
               Container(
-                height: 210,
+                height: 230,
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -48,12 +48,10 @@ class HomeView extends GetView<HomeController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const CircleAvatar(
-                      radius: 30,
+                      radius: 35,
                       backgroundColor: Colors.white,
-                      child: Icon(
-                        Iconsax.profile_tick,
-                        size: 30,
-                      ),
+                      backgroundImage: AssetImage(
+                          'assets/icon.png'),
                     ),
                     const SizedBox(height: 10),
                     const Text(
@@ -65,7 +63,7 @@ class HomeView extends GetView<HomeController> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 10),
                     Flexible(
                       child: Text(
                         'davisabilissalimuyp@gmail.com',
@@ -418,8 +416,8 @@ class HomeView extends GetView<HomeController> {
                                                             icon: const Icon(
                                                                 Icons
                                                                     .remove_circle,
-                                                                color:
-                                                                    Colors.red,
+                                                                color: Color(
+                                                                    0xff303030),
                                                                 size: 22),
                                                           ),
                                                           Obx(() => Text(
@@ -436,8 +434,8 @@ class HomeView extends GetView<HomeController> {
                                                             icon: const Icon(
                                                                 Icons
                                                                     .add_circle,
-                                                                color: Colors
-                                                                    .green,
+                                                                color: Color(
+                                                                    0xff303030),
                                                                 size: 22),
                                                           ),
                                                         ],
@@ -468,7 +466,7 @@ class HomeView extends GetView<HomeController> {
                                                     style: ElevatedButton
                                                         .styleFrom(
                                                       backgroundColor:
-                                                          Colors.red,
+                                                          Color(0xff303030),
                                                       foregroundColor:
                                                           Colors.white,
                                                     ),
@@ -482,7 +480,7 @@ class HomeView extends GetView<HomeController> {
                                                     style: ElevatedButton
                                                         .styleFrom(
                                                       backgroundColor:
-                                                          Colors.blue,
+                                                          Color(0xff303030),
                                                       foregroundColor:
                                                           Colors.white,
                                                     ),

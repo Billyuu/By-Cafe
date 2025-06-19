@@ -1,3 +1,4 @@
+import 'package:bycafe/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -37,45 +38,53 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Obx(() => Column(
-  children: controller.homeController.pesananList.map((pesanan) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '${pesanan['jumlah']} x ${pesanan['nama']}',
-          style: TextStyle(fontSize: 18),
-        ),
-        Row(
-          children: [
-            Text(
-              'Rp ${pesanan['totalHarga']}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            IconButton(
-              icon: const Icon(Iconsax.trash_copy),
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Konfirmasi",
-                  middleText: "Yakin ingin menghapus pesanan ini?",
-                  textCancel: "Batal",
-                  textConfirm: "Hapus",
-                  confirmTextColor: Colors.white,
-                  onConfirm: () {
-                    controller.homeController.pesananList.remove(pesanan);
-                    controller.homeController.totalItem.value -= pesanan['jumlah'] as int;
-                    controller.homeController.totalBayar.value -= pesanan['totalHarga'] as int;
-                    Get.back();
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }).toList(),
-))
-
+                        children: controller.homeController.pesananList
+                            .map((pesanan) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${pesanan['jumlah']} x ${pesanan['nama']}',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Rp ${pesanan['totalHarga']}',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Iconsax.trash_copy),
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        title: "Konfirmasi",
+                                        middleText:
+                                            "Yakin ingin menghapus pesanan ini?",
+                                        textCancel: "Batal",
+                                        textConfirm: "Hapus",
+                                        confirmTextColor: Colors.white,
+                                        onConfirm: () {
+                                          controller.homeController.pesananList
+                                              .remove(pesanan);
+                                          controller.homeController.totalItem
+                                                  .value -=
+                                              pesanan['jumlah'] as int;
+                                          controller.homeController.totalBayar
+                                                  .value -=
+                                              pesanan['totalHarga'] as int;
+                                          Get.back();
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ))
                 ],
               ),
             ),
@@ -101,7 +110,7 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        '${controller.totalItem.value}',
+                        '${controller.homeController.totalItem.value}',
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -117,10 +126,9 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                         style: TextStyle(fontSize: 18),
                       ),
                       Obx(() => Text(
-  'Rp ${controller.homeController.totalBayar.value}',
-  style: const TextStyle(fontSize: 18),
-))
-
+                            'Rp ${controller.homeController.totalBayar.value}',
+                            style: const TextStyle(fontSize: 18),
+                          ))
                     ],
                   ),
                   SizedBox(height: 10),

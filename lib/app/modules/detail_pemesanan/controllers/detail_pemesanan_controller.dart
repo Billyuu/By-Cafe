@@ -16,9 +16,9 @@ class DetailPemesananController extends GetxController {
       totalBayar.value -= pesanan['totalHarga'] as int;
       pesananList.removeAt(index);
     }
-    void tambahPesanan(String nama, int quantity, int totalHarga) {
-    homeController.tambahPesanan(nama, quantity, totalHarga);
-  }
+  //   void tambahPesanan(String nama, int quantity, int totalHarga) {
+  //   homeController.tambahPesanan(nama, quantity, totalHarga);
+  // }
   }
 }
 

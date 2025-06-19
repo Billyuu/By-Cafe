@@ -147,7 +147,7 @@ class MenuPenjualanView extends GetView<MenuPenjualanController> {
                                     ),
                                     style: TextButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 7, vertical: 4),
+                                          horizontal: 7 , vertical: 4),
                                       minimumSize: Size.zero,
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
