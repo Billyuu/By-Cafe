@@ -4,12 +4,16 @@ import '../modules/add_penjualan/bindings/add_penjualan_binding.dart';
 import '../modules/add_penjualan/views/add_penjualan_view.dart';
 import '../modules/detail_pemesanan/bindings/detail_pemesanan_binding.dart';
 import '../modules/detail_pemesanan/views/detail_pemesanan_view.dart';
+import '../modules/history/bindings/history_binding.dart';
+import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/menu_penjualan/bindings/menu_penjualan_binding.dart';
 import '../modules/menu_penjualan/views/menu_penjualan_view.dart';
+import '../modules/printer/bindings/printer_binding.dart';
+import '../modules/printer/views/printer_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
@@ -71,6 +75,16 @@ class AppPages {
       name: _Paths.UPDATE,
       page: () => UpdateView(),
       binding: UpdateBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRINTER,
+      page: () => const PrinterView(),
+      binding: PrinterBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
     ),
   ];
 }

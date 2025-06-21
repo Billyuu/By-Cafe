@@ -1,4 +1,3 @@
-import 'package:bycafe/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -183,12 +182,44 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                   SizedBox(
                     height: 70,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final pesananSaatIni = List<Map<String, dynamic>>.from(
+                          controller.homeController.pesananList,
+                        );
+                        final total = controller.totalBayar.value;
+                        final waktu = DateTime.now();
+
+                        // Simpan ke history
+                        controller.homeController.historyList.add({
+                          'pesanan': pesananSaatIni,
+                          'total': total,
+                          'tanggal': waktu.toIso8601String(),
+                        });
+
+                        // Reset pesanan
+                        controller.homeController.pesananList.clear();
+                        controller.homeController.totalItem.value = 0;
+                        controller.homeController.totalBayar.value = 0;
+
+                        // Tampilkan notifikasi
+                        Get.snackbar(
+                          'Berhasil',
+                          'Pesanan telah dibayar dan disimpan ke history',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white,
+                        );
+
+                        // Navigasi ke halaman home
+                        Get.offAllNamed('/home');
+                      },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff303030),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      child: Text(
+                        backgroundColor: const Color(0xff303030),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text(
                         'BAYAR',
                         style: TextStyle(fontSize: 19, color: Colors.white),
                       ),

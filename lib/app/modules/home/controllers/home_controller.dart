@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+
 class HomeController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -12,9 +13,12 @@ class HomeController extends GetxController {
   // Daftar pesanan
   var pesananList = <Map<String, dynamic>>[].obs;
 
-  //ketika menambahkan pesanan harga
+  // ketika menambahkan pesanan harga
   var totalBayar = 0.obs;
   var totalItem = 0.obs;
+
+  // 🔥 Tambahan: daftar riwayat pesanan
+  var historyList = <Map<String, dynamic>>[].obs;
 
   // Format Rupiah
   String formatRupiah(num number) {
@@ -48,7 +52,25 @@ class HomeController extends GetxController {
     }
   }
 
-  
+  // 🔥 Tambahan: simpan ke riwayat
+  void simpanKeHistory() {
+    if (pesananList.isEmpty) return;
+
+    final pesananBaru = List<Map<String, dynamic>>.from(pesananList);
+    final total = totalBayar.value;
+    final waktu = DateTime.now();
+
+    historyList.add({
+      'pesanan': pesananBaru,
+      'total': total,
+      'tanggal': waktu.toIso8601String(),
+    });
+
+    // Reset pesanan setelah disimpan
+    pesananList.clear();
+    totalItem.value = 0;
+    totalBayar.value = 0;
+  }
 
   // Stream untuk mengambil data dari Firestore
   Stream<QuerySnapshot<Object?>> streamData() {

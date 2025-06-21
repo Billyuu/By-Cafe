@@ -4,7 +4,7 @@ import 'package:bycafe/app/modules/home/controllers/home_controller.dart';
 class DetailPemesananController extends GetxController {
   final homeController = Get.find<HomeController>();
 
-  // Getter supaya ambil data langsung dari HomeController
+  // Getter untuk akses data dari HomeController
   List<Map<String, dynamic>> get pesananList => homeController.pesananList;
   RxInt get totalItem => homeController.totalItem;
   RxInt get totalBayar => homeController.totalBayar;
@@ -16,9 +16,23 @@ class DetailPemesananController extends GetxController {
       totalBayar.value -= pesanan['totalHarga'] as int;
       pesananList.removeAt(index);
     }
-  //   void tambahPesanan(String nama, int quantity, int totalHarga) {
-  //   homeController.tambahPesanan(nama, quantity, totalHarga);
-  // }
   }
+
+  /// Simpan pesanan ke history, lalu reset data pesanan
+  void bayarPesanan() {
+  final pesananSaatIni = List<Map<String, dynamic>>.from(homeController.pesananList);
+  final total = totalBayar.value;
+  final waktu = DateTime.now();
+
+  homeController.historyList.add({
+    'pesanan': pesananSaatIni,
+    'total': total,
+    'tanggal': waktu.toString(),
+  });
+
+  homeController.pesananList.clear();
+  homeController.totalItem.value = 0;
+  homeController.totalBayar.value = 0;
 }
 
+}

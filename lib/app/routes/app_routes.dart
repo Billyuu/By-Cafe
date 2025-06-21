@@ -12,6 +12,8 @@ abstract class Routes {
   static const REGISTER = _Paths.REGISTER;
   static const RESET_PASSWORD = _Paths.RESET_PASSWORD;
   static const UPDATE = _Paths.UPDATE;
+  static const PRINTER = _Paths.PRINTER;
+  static const HISTORY = _Paths.HISTORY;
 }
 
 abstract class _Paths {
@@ -25,4 +27,6 @@ abstract class _Paths {
   static const REGISTER = '/register';
   static const RESET_PASSWORD = '/reset-password';
   static const UPDATE = '/update';
+  static const PRINTER = '/printer';
+  static const HISTORY = '/history';
 }

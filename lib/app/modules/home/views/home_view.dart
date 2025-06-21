@@ -5,8 +5,6 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:bycafe/app/routes/app_pages.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:intl/intl.dart';
-// import 'package:bycafe/app/modules/detail_pemesanan/controllers/detail_pemesanan_controller.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -89,6 +87,20 @@ class HomeView extends GetView<HomeController> {
                       title: Text('Menu'),
                       onTap: () {
                         Get.toNamed(Routes.MENU_PENJUALAN);
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Iconsax.printer_copy),
+                      title: Text('Printer'),
+                      onTap: () {
+                        Get.toNamed(Routes.PRINTER);
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Iconsax.timer_1_copy),
+                      title: Text('History'),
+                      onTap: () {
+                        Get.toNamed(Routes.HISTORY);
                       },
                     ),
                     ListTile(
