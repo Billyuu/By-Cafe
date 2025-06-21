@@ -1,9 +1,8 @@
+import 'package:bycafe/app/modules/printer/controllers/printer_controller.dart';
+import 'package:bycafe/app/modules/service/settings_service.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../controllers/detail_pemesanan_controller.dart';
-
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class DetailPemesananView extends GetView<DetailPemesananController> {
@@ -183,34 +182,77 @@ class DetailPemesananView extends GetView<DetailPemesananController> {
                     height: 70,
                     child: ElevatedButton(
                       onPressed: () {
+                        final homeController = controller.homeController;
+
                         final pesananSaatIni = List<Map<String, dynamic>>.from(
-                          controller.homeController.pesananList,
+                          homeController.pesananList,
                         );
                         final total = controller.totalBayar.value;
                         final waktu = DateTime.now();
 
                         // Simpan ke history
-                        controller.homeController.historyList.add({
+                        homeController.historyList.add({
                           'pesanan': pesananSaatIni,
                           'total': total,
                           'tanggal': waktu.toIso8601String(),
                         });
 
-                        // Reset pesanan
-                        controller.homeController.pesananList.clear();
-                        controller.homeController.totalItem.value = 0;
-                        controller.homeController.totalBayar.value = 0;
+                        // Ambil printer service
+                        final printerController = Get.find<PrinterController>();
+                        final printerService = printerController.printerService;
 
-                        // Tampilkan notifikasi
+                        if (printerService.isConnected.value) {
+                          // Ambil nilai PPN & Diskon dari SettingsService
+                          final settings = Get.find<SettingsService>();
+                          final ppn = settings.ppn.value;
+                          final discount = settings.discount.value;
+
+                          // Hitung ulang total jika perlu (opsional)
+                          final subtotal = total / ((1 - discount) * (1 + ppn));
+
+                          // Ubah format pesanan agar cocok dengan printReceipt()
+                          final List<Map<String, dynamic>> formattedItems =
+                              pesananSaatIni.map((item) {
+                            return {
+                              'name': item['nama'] ?? 'Item',
+                              'quantity': item['jumlah'] ?? 1,
+                              'price': item['totalHarga'] ??
+                                  0, // Asumsinya total per item
+                            };
+                          }).toList();
+
+                          // Cetak struk
+                          printerService.printReceipt({
+                            'items': formattedItems,
+                            'subtotal': subtotal,
+                            'discount_percentage': discount,
+                            'ppn_percentage': ppn,
+                            'total_amount': total,
+                          });
+                        } else {
+                          Get.snackbar(
+                            'Printer tidak terhubung',
+                            'Harap hubungkan printer terlebih dahulu',
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                          return;
+                        }
+
+                        // Reset pesanan
+                        homeController.pesananList.clear();
+                        homeController.totalItem.value = 0;
+                        homeController.totalBayar.value = 0;
+
+                        // Notifikasi sukses & navigasi
                         Get.snackbar(
                           'Berhasil',
-                          'Pesanan telah dibayar dan disimpan ke history',
+                          'Pesanan telah dibayar dan dicetak',
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.green,
                           colorText: Colors.white,
                         );
 
-                        // Navigasi ke halaman home
                         Get.offAllNamed('/home');
                       },
                       style: ElevatedButton.styleFrom(

@@ -1,23 +1,49 @@
 import 'package:get/get.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+import 'package:bycafe/app/modules/service/printer_service.dart';
 
 class PrinterController extends GetxController {
-  //TODO: Implement PrinterController
+  final PrinterService printerService = Get.find();
 
-  final count = 0.obs;
+  final RxString statusMessage = ''.obs;
+
+  RxBool get isConnected => printerService.isConnected;
+  RxBool get isScanning => printerService.isScanning;
+  RxList<BluetoothInfo> get devices => printerService.availableDevices;
+  RxString get selectedPrinter => printerService.macAddress;
+
   @override
   void onInit() {
     super.onInit();
+    scanBluetooth();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void scanBluetooth() async {
+    statusMessage.value = "🔍 Scanning...";
+    await printerService.scanDevices();
+    statusMessage.value = "✅ ${devices.length} perangkat ditemukan";
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  void connect(String mac) async {
+    statusMessage.value = "🔌 Menghubungkan ke $mac...";
+    await printerService.connect(mac);
+    statusMessage.value = isConnected.value
+        ? "✅ Terhubung ke printer"
+        : "❌ Gagal terhubung";
   }
 
-  void increment() => count.value++;
+  void disconnect() async {
+    await printerService.disconnect();
+    statusMessage.value = "🔌 Koneksi diputus";
+  }
+
+  void printTest() async {
+    statusMessage.value = "🧪 Tes print...";
+    await printerService.printTest();
+  }
+
+  Future<void> printReceipt(Map<String, dynamic> data) async {
+    statusMessage.value = "🖨️ Mencetak struk...";
+    await printerService.printReceipt(data);
+  }
 }
