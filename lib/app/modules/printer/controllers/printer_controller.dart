@@ -9,8 +9,8 @@ class PrinterController extends GetxController {
 
   RxBool get isConnected => printerService.isConnected;
   RxBool get isScanning => printerService.isScanning;
-  RxList<BluetoothInfo> get devices => printerService.availableDevices;
-  RxString get selectedPrinter => printerService.macAddress;
+  RxList<BluetoothInfo> get devices => printerService.availableDevices; //daftar printer
+  RxString get selectedPrinter => printerService.macAddress; //alamat
 
   @override
   void onInit() {

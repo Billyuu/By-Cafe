@@ -61,7 +61,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Flexible(
+                    Flexible( //mengisi ruang yang di perlukan
                       child: Text(
                         'davisabilissalimuyp@gmail.com',
                         style: const TextStyle(
@@ -78,7 +78,7 @@ class HomeView extends GetView<HomeController> {
                   ],
                 ),
               ),
-              Expanded(
+              Expanded( //mengisi ruang kosong
                 child: ListView(
                   children: [
                     ListTile(
@@ -133,7 +133,6 @@ class HomeView extends GetView<HomeController> {
         child: Column(
           children: [
             Padding(
-              //algoia firebase
               padding: const EdgeInsets.all(10),
               child: TextField(
                 cursorColor: Color(0xff303030),

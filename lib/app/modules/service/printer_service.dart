@@ -169,142 +169,140 @@ Future<void> printTest() async {
   }
 }
 
-  Future<void> printReceipt(Map<String, dynamic> data) async {
-    if (!isConnected.value) {
-      Get.snackbar('Error', 'Printer belum terhubung!', snackPosition: SnackPosition.BOTTOM);
-      return;
+ Future<void> printReceipt(Map<String, dynamic> data) async {
+  if (!isConnected.value) {
+    Get.snackbar('Error', 'Printer belum terhubung!', snackPosition: SnackPosition.BOTTOM);
+    return;
+  }
+
+  try {
+    final currency = NumberFormat("#,##0", "id_ID");
+    final profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm58, profile);
+    List<int> bytes = [];
+
+    bytes += generator.text("BY CAFE",
+        styles: const PosStyles(bold: true, align: PosAlign.center, height: PosTextSize.size2, width: PosTextSize.size2));
+    bytes += generator.text("Jl.KH Abdul Qohar kec.Pohjentrek", styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("Telp: 081-333-15-4747", styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    double subtotal = 0.0;
+
+    if (data.containsKey('items') && data['items'] is List) {
+      bytes += generator.text('ITEM                 QTY   HARGA');
+      bytes += generator.hr();
+      for (var item in data['items']) {
+        final name = item['name']?.toString() ?? '-';
+        final quantity = int.tryParse(item['quantity']?.toString() ?? '0') ?? 0;
+        final price = double.tryParse(item['price']?.toString() ?? '0.0') ?? 0.0;
+        final totalItemPrice = quantity * price;
+
+        subtotal += totalItemPrice;
+
+        bytes += generator.row([
+          PosColumn(
+            text: name.length > 15 ? '${name.substring(0, 12)}...' : name.padRight(15),
+            width: 6,
+            styles: const PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: quantity.toString().padLeft(3),
+            width: 3,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+          PosColumn(
+            text: currency.format(totalItemPrice).padLeft(7), // Harga dikali QTY
+            width: 3,
+            styles: const PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+    } else {
+      log('Data "items" tidak ditemukan atau bukan List.');
     }
 
-    try {
-      final currency = NumberFormat("#,##0", "id_ID");
-      final profile = await CapabilityProfile.load();
-      final generator = Generator(PaperSize.mm58, profile);
-      List<int> bytes = [];
+    bytes += generator.hr();
 
-      bytes += generator.text("BY CAFE",
-          styles: const PosStyles(bold: true, align: PosAlign.center, height: PosTextSize.size2, width: PosTextSize.size2)); // Ukuran teks header
-      bytes += generator.text("Jl. Raya Teknologi No. 123",
-          styles: const PosStyles(align: PosAlign.center));
-      bytes += generator.text("Telp: 081234567890",
-          styles: const PosStyles(align: PosAlign.center));
-      bytes += generator.hr(); // Horizontal Rule
+    double discountPercentage = (data['discount_percentage'] as num?)?.toDouble() ?? 0.0;
+    double ppnPercentage = (data['ppn_percentage'] as num?)?.toDouble() ?? 0.0;
 
-      // Loop untuk setiap item
-      if (data.containsKey('items') && data['items'] is List) {
-        bytes += generator.text('ITEM                 QTY   HARGA    TOTAL'); // Header tabel
-        bytes += generator.hr();
-        for (var item in data['items']) {
-          final name = item['name']?.toString() ?? '-';
-          // Pastikan kuantitas adalah int
-          final quantity = int.tryParse(item['quantity']?.toString() ?? '0') ?? 0;
-          // Pastikan harga adalah double
-          final price = double.tryParse(item['price']?.toString() ?? '0.0') ?? 0.0;
-          
-          final itemTotal = quantity * price; // Hasilnya akan double karena 'price' adalah double
+    double discountAmount = subtotal * discountPercentage;
+    double amountAfterDiscount = subtotal - discountAmount;
+    double ppnAmount = amountAfterDiscount * ppnPercentage;
+    double totalAmount = amountAfterDiscount + ppnAmount;
 
-          bytes += generator.row([
-            PosColumn(
-              text: name.length > 15 ? '${name.substring(0, 12)}...' : name.padRight(15), // Potong jika terlalu panjang
-              width: 5, // Sesuaikan lebar kolom
-              styles: const PosStyles(align: PosAlign.left),
-            ),
-            PosColumn(
-              text: quantity.toString().padLeft(3),
-              width: 2, // Sesuaikan lebar kolom
-              styles: const PosStyles(align: PosAlign.right),
-            ),
-            PosColumn(
-              text: currency.format(price).padLeft(7), // Harga satuan
-              width: 3, // Sesuaikan lebar kolom
-              styles: const PosStyles(align: PosAlign.right),
-            ),
-            PosColumn(
-              text: currency.format(itemTotal).padLeft(7), // Total per item
-              width: 2, // Sesuaikan lebar kolom
-              styles: const PosStyles(align: PosAlign.right),
-            ),
-          ]);
-        }
-      } else {
-        log('Data "items" tidak ditemukan atau bukan List.');
-      }
+    bytes += generator.row([
+      PosColumn(text: "Subtotal", width: 6),
+      PosColumn(
+        text: "Rp${currency.format(subtotal)}",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+    bytes += generator.row([
+      PosColumn(text: "Diskon (${(discountPercentage * 100).toInt()}%)", width: 6),
+      PosColumn(
+        text: "-Rp${currency.format(discountAmount)}",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
+    bytes += generator.row([
+      PosColumn(text: "PPN (${(ppnPercentage * 100).toInt()}%)", width: 6),
+      PosColumn(
+        text: "+Rp${currency.format(ppnAmount)}",
+        width: 6,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+    ]);
 
-      bytes += generator.hr();
-
-      // Pastikan semua nilai numerik yang diambil dari 'data' dikonversi ke double
-      // Gunakan (data['key'] as num?)?.toDouble() ?? 0.0 untuk keamanan
-      double subtotal = (data['subtotal'] as num?)?.toDouble() ?? 0.0;
-      double discountPercentage = (data['discount_percentage'] as num?)?.toDouble() ?? 0.0;
-      double ppnPercentage = (data['ppn_percentage'] as num?)?.toDouble() ?? 0.0;
-      double totalAmount = (data['total_amount'] as num?)?.toDouble() ?? 0.0;
-
-      double discountAmount = subtotal * discountPercentage;
-      double amountAfterDiscount = subtotal - discountAmount;
-      double ppnAmount = amountAfterDiscount * ppnPercentage;
-
-      bytes += generator.row([
-        PosColumn(text: "Subtotal", width: 6),
-        PosColumn(
-          text: "Rp${currency.format(subtotal)}",
-          width: 6,
-          styles: const PosStyles(align: PosAlign.right),
+    bytes += generator.hr();
+    bytes += generator.row([
+      PosColumn(
+        text: "TOTAL",
+        width: 6,
+        styles: const PosStyles(
+          bold: true,
+          height: PosTextSize.size1,
+          width: PosTextSize.size1,
         ),
-      ]);
-      bytes += generator.row([
-        PosColumn(text: "Diskon (${(discountPercentage * 100).toInt()}%)", width: 6),
-        PosColumn(
-          text: "-Rp${currency.format(discountAmount)}",
-          width: 6,
-          styles: const PosStyles(align: PosAlign.right),
+      ),
+      PosColumn(
+        text: "Rp${currency.format(totalAmount)}",
+        width: 6,
+        styles: const PosStyles(
+          align: PosAlign.right,
+          bold: true,
+          height: PosTextSize.size1,
+          width: PosTextSize.size1,
         ),
-      ]);
-      bytes += generator.row([
-        PosColumn(text: "PPN (${(ppnPercentage * 100).toInt()}%)", width: 6),
-        PosColumn(
-          text: "+Rp${currency.format(ppnAmount)}",
-          width: 6,
-          styles: const PosStyles(align: PosAlign.right),
-        ),
-      ]);
-      bytes += generator.hr();
-      bytes += generator.row([
-        PosColumn(
-          text: "TOTAL",
-          width: 6,
-          styles: const PosStyles(bold: true, height: PosTextSize.size2, width: PosTextSize.size2),
-        ),
-        PosColumn(
-          text: "Rp${currency.format(totalAmount)}",
-          width: 6,
-          styles: const PosStyles(
-            align: PosAlign.right,
-            bold: true,
-            height: PosTextSize.size2,
-            width: PosTextSize.size2,
-          ),
-        ),
-      ]);
-      bytes += generator.feed(2);
-      bytes += generator.text("Terima kasih telah berbelanja di BY CAFE!",
-          styles: const PosStyles(align: PosAlign.center));
-      bytes += generator.feed(3);
-      bytes += generator.cut();
+      ),
+    ]);
 
-      final result = await PrintBluetoothThermal.writeBytes(bytes);
-      if (result) {
-        Get.snackbar("Sukses", "Struk berhasil dicetak.");
-      } else {
-        Get.snackbar("Error", "Gagal mencetak ke printer. Periksa koneksi.",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Get.theme.colorScheme.error.withOpacity(0.8),
-            colorText: Get.theme.colorScheme.onError);
-      }
-    } catch (e) {
-      log("❌ Gagal mencetak struk: $e");
-      Get.snackbar("Error", "Gagal mencetak struk: ${e.toString()}",
+    bytes += generator.feed(2);
+    bytes += generator.text("Terima kasih telah berbelanja di BY CAFE!",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.feed(3);
+    bytes += generator.cut();
+
+    final result = await PrintBluetoothThermal.writeBytes(bytes);
+    if (result) {
+      Get.snackbar("Sukses", "Struk berhasil dicetak.");
+    } else {
+      Get.snackbar("Error", "Gagal mencetak ke printer. Periksa koneksi.",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Get.theme.colorScheme.error.withOpacity(0.8),
           colorText: Get.theme.colorScheme.onError);
     }
+  } catch (e) {
+    log("❌ Gagal mencetak struk: $e");
+    Get.snackbar("Error", "Gagal mencetak struk: ${e.toString()}",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.colorScheme.error.withOpacity(0.8),
+        colorText: Get.theme.colorScheme.onError);
   }
+}
+
+
 }
